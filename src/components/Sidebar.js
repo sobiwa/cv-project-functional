@@ -2,29 +2,13 @@ import { Component } from 'react';
 import Input from './Input';
 import InputChild from './InputChild';
 import uniqid from 'uniqid';
-import addIcon from '../assets/add.svg';
-import deleteIcon from '../assets/delete.svg';
 import linkIcon from '../assets/link.svg';
 import linkOffIcon from '../assets/link-off.svg';
-import { handleBlur } from './shared/helpers';
-
-class DeleteButton extends Component {
-  render() {
-    return (
-      <button
-        className="delete-button"
-        type="button"
-        onClick={this.props.handleClick}
-      >
-        <img src={deleteIcon} alt="delete" />
-      </button>
-    );
-  }
-}
+import { DeleteButton, AddButton, handleBlur } from './shared/helpers';
 
 export default class Sidebar extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.handleBlur = handleBlur;
   }
   newItem = (newDefault) => ({
@@ -110,19 +94,18 @@ export default class Sidebar extends Component {
                 <InputChild
                   type="text"
                   text={skill.text.input}
-                  handleBlur={this.handleBlur('skills', skill.id, 'text')}
+                  target="text"
+                  id={[skill.id]}
+                  handleBlur={this.handleBlur('skills')}
                 />
-                <DeleteButton handleClick={() => this.deleteSkill(skill.id)} />
+                <DeleteButton
+                  onClick={() => this.deleteSkill(skill.id)}
+                  whatToDelete="skill"
+                />
               </div>
             );
           })}
-          <button
-            className="add-button add-skill-button"
-            type="button"
-            onClick={this.addSkill}
-          >
-            <img src={addIcon} alt="add skill" />
-          </button>
+          <AddButton onClick={this.addSkill} whatToAdd="skill" />
         </div>
         <div className="sidebar--section sidebar--links">
           <h4 className="sidebar--title">Links</h4>
@@ -130,9 +113,11 @@ export default class Sidebar extends Component {
             return (
               <div key={link.id} className="sidebar--link">
                 <InputChild
+                  id={[link.id]}
                   type="text"
+                  target="description"
                   text={link.description.input}
-                  handleBlur={this.handleBlur('links', link.id, 'description')}
+                  handleBlur={this.handleBlur('links')}
                 />
                 <a
                   style={{ cursor: this.state.linksOn ? 'pointer' : 'text' }}
@@ -142,23 +127,19 @@ export default class Sidebar extends Component {
                   rel="noreferrer noopener"
                 >
                   <InputChild
+                    id={[link.id]}
                     type="text"
+                    target="url"
                     text={link.url.input}
-                    handleBlur={this.handleBlur('links', link.id, 'url')}
+                    handleBlur={this.handleBlur('links')}
                   />
                 </a>
-                <DeleteButton handleClick={() => this.deleteLink(link.id)} />
+                <DeleteButton onClick={() => this.deleteLink(link.id)} whatToDelete='link' />
               </div>
             );
           })}
           <div className="flex-buttons">
-            <button
-              className="add-button add-link-button"
-              type="button"
-              onClick={this.addLink}
-            >
-              <img src={addIcon} alt="add skill" />
-            </button>
+            <AddButton onClick={this.addLink} whatToAdd="link" />
             <button
               title="Toggle link functionality"
               className="link-toggle-button"

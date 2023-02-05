@@ -86,6 +86,12 @@
   gap: 1rem;
 }
 
+.header--text .name input,
+.header--text .name .true-text,
+.header--text .name .expander {
+  line-height: 1em;
+}
+
 input, textarea {
   width: 100%;
   font-size: inherit;
@@ -106,6 +112,7 @@ textarea{
 
 .edit-container {
   min-width: 1em;
+  overflow: hidden;
   width: fit-content;
   position: relative;
   border-radius: 0.2em;
@@ -122,7 +129,11 @@ textarea,
 input,
 .expander,
 .true-text {
-  line-height: 1.5rem;
+  /* box-sizing: border-box; */
+  line-height: 1.5em;
+  font-weight: inherit;
+  font-size: inherit;
+  font-family: inherit;
 }
 
 @keyframes focus {
@@ -160,11 +171,6 @@ input:focus + .focus-indicator {
   display: flex;
   flex-direction: column;
   gap: 2rem
-}
-
-.sidebar--section {
-  /* display: flex; 
-   flex-direction: column; */
 }
 
 .sidebar--skill {
@@ -261,8 +267,11 @@ input:focus + .focus-indicator {
 }
 
 .main--title {
+  font-size: 1.5rem;
   font-family: Karla, sans-serif;
   font-weight: 600;
+  padding: 0;
+  margin: 2em 0 0.5em 0;
 }
 
 main {
@@ -270,7 +279,17 @@ main {
   grid-area: 2 / 1 / -1 / 2;
 }
 
-.main--title {
-  padding: 0;
-  margin: 2em 0 0.5em 0;
+.employment--location {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.employment--duration {
+  color: gray;
+  font-weight: 500;
+
+}
+.employment--tasks {
+  margin: 0;
+  padding: 0.5rem 0 0 3rem;
 }
