@@ -102,19 +102,26 @@ export default class Main extends Component {
   componentDidUpdate() {
     localStorage.setItem('employment', JSON.stringify(this.state.employment));
   }
+
+  componentDidMount() {
+    console.log(document.querySelector('.App').scrollHeight)
+    console.log(document.querySelector('.App').offsetHeight)
+    console.log(document.querySelector('.employment').scrollHeight)
+    console.log(document.querySelector('.employment-item').scrollHeight)
+  }
   render() {
     return (
       <main>
         <section className="profile">
           <div className='section-icon'><img src={profileIcon} alt='profile icon'/></div>
-          <div>
+          <div className='section-content'>
             <h2 className="main--title">Profile</h2>
             <Input id="profile" type="textarea" text="A little about yourself" />
           </div>
         </section>
         <section className="employment">
           <div className='section-icon'><img src={employmentIcon} alt='employment icon' /></div>
-          <div>
+          <div className='section-content'>
             <h2 className="main--title">Employment History</h2>
             {this.state.employment.map((item) => (
               <div className="employment-item">
@@ -150,7 +157,7 @@ export default class Main extends Component {
         {/*  */}
         <section className="education">
           <div className='section-icon'><img src={educationIcon} alt='education icon' /></div>
-          <div>
+          <div className='section-content'>
             <h2 className="main--title">Education</h2>
             {this.state.education.map((item) => (
               <div className="education-item">

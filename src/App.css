@@ -37,6 +37,7 @@
 }
 
 .App {
+  box-sizing: border-box;
   width: var(--page-width);
   height: var(--page-height);
   padding: 3rem;
@@ -94,6 +95,10 @@
 
 section {
   display: flex;
+}
+
+.section-content {
+  width: 100%;
 }
 
 .section-icon {
@@ -358,8 +363,8 @@ main {
 
 .employment--tasks li .delete-task-button,
 .education--details li .delete-detail-button {
-  height: 1em;
-  width: 1em;
+  height: 1.1rem;
+  width: 1.1rem;
 }
 
 .employment-item,
@@ -373,5 +378,22 @@ main {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+@media print {
+  :root {
+    --page-width: 8.5in;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 

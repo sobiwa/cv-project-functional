@@ -5,12 +5,17 @@ import Main from './components/Main'
 import './App.css';
 
 export default class App extends Component {
+
+  printPage = () => {
+    window.print();
+  }
   render() {
     return (
-    <div className="App">
+    <div id='section-to-print' className="App">
       <Header />
       <Sidebar />
       <Main />
+      {/* <button onClick={this.printPage}>Print</button> */}
 
     </div>
     );
