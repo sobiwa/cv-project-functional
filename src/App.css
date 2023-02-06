@@ -92,6 +92,25 @@
   line-height: 1em;
 }
 
+section {
+  display: flex;
+}
+
+.section-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+  margin: 1.6rem 0.5rem 0 0;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-icon img {
+  width: 100%;
+}
+
 input, textarea {
   width: 100%;
   font-size: inherit;
@@ -99,9 +118,12 @@ input, textarea {
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto auto auto 0;
 }
 
-textarea{
+textarea {
   height: 100%;
   appearance: none;
   outline: none;
@@ -180,7 +202,9 @@ input:focus + .focus-indicator {
   border-bottom: 0.1rem solid rgb(36, 36, 90);
 }
 
-.sidebar--link {
+.sidebar--link,
+.employment-item,
+.education-item {
   position: relative;
 }
 
@@ -192,7 +216,9 @@ input:focus + .focus-indicator {
 
 .add-button,
 .delete-button,
-.link-toggle-button {
+.link-toggle-button,
+.add-task-button,
+.add-detail-button {
   opacity: 0.3;
   display:none;
   border-radius: 50%;
@@ -202,6 +228,10 @@ input:focus + .focus-indicator {
   cursor: pointer;
   width: 2rem;
   height: 2rem;
+}
+
+.icon-button:active {
+  scale: 0.9;
 }
 
 .add-button {
@@ -224,22 +254,40 @@ input:focus + .focus-indicator {
   background: radial-gradient(rgba(93, 206, 255, 0.29), rgb(93, 206, 255));
 }
 
+.add-task-button, 
+.add-detail-button {
+  padding: 0.2em;
+  background: radial-gradient(rgba(222, 255, 88, 0.456), rgb(222, 255, 88));
+}
+
 .sidebar--skills,
 .sidebar--links {
   padding-right: 3rem;
   margin-right: -3rem;
 }
+.sidebar--skill:hover .icon-button,
 .sidebar--skills:hover .add-skill-button,
-.sidebar--skill:hover .delete-button,
+.sidebar--link:hover .icon-button,
 .sidebar--links:hover .add-link-button,
 .sidebar--links:hover .link-toggle-button,
-.sidebar--links:hover .delete-button {
+.employment:hover .add-employment-button,
+.employment-item:hover .delete-employment-button,
+.employment-item:hover .add-task-button,
+.employment--tasks li:hover .delete-task-button,
+.education-item:hover .delete-education-button,
+.education:hover .add-education-button,
+.education-item:hover .add-detail-button,
+.education--details li:hover .delete-detail-button {
   display: flex;
 }
 
-.delete-button:hover,
-.add-button:hover,
-.link-toggle-button:hover {
+.delete-employment-button,
+.delete-education-button {
+  position: relative;
+  /* margin: 0 0 auto auto; */
+}
+
+.icon-button:hover {
   opacity: 1;
 }
 
@@ -248,7 +296,9 @@ input:focus + .focus-indicator {
 }
 
 .add-button img, 
-.link-toggle-button img{
+.link-toggle-button img,
+.add-task-button img,
+.add-detail-button img {
   height: 100%;
   width: 100%;
 }
@@ -271,7 +321,7 @@ input:focus + .focus-indicator {
   font-family: Karla, sans-serif;
   font-weight: 600;
   padding: 0;
-  margin: 2em 0 0.5em 0;
+  margin: 1.5rem 0 0.3rem 0;
 }
 
 main {
@@ -279,17 +329,49 @@ main {
   grid-area: 2 / 1 / -1 / 2;
 }
 
-.employment--location {
+.employment--location,
+.education--school {
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-.employment--duration {
+.education--school {
+  font-weight: 400;
+}
+
+.employment--duration,
+.education--duration {
   color: gray;
   font-weight: 500;
-
 }
-.employment--tasks {
+.employment--tasks,
+.education--details {
   margin: 0;
   padding: 0.5rem 0 0 3rem;
+  list-style:disc;
 }
+
+.employment--tasks li,
+.education--details li {
+  position: relative;
+}
+
+.employment--tasks li .delete-task-button,
+.education--details li .delete-detail-button {
+  height: 1em;
+  width: 1em;
+}
+
+.employment-item,
+.education-item {
+  margin-bottom: 1rem;
+}
+
+.employment--buttons,
+.education--buttons {
+  padding: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+

@@ -2,41 +2,43 @@ import { Component } from 'react';
 import InputChild from './InputChild';
 import { DeleteButton } from './shared/helpers';
 
-export default class Employment extends Component {
+export default class Education extends Component {
   render() {
-    const { location, duration, tasks, deleteTask, handleBlur, id } =
+    const { school, duration, details, deleteDetail, handleBlur, id } =
       this.props;
     return (
       <div>
         <InputChild
           id={[id]}
-          className="employment--location"
-          text={location}
-          target="location"
+          className="education--school"
+          text={school}
+          target="school"
           type="text"
           handleBlur={handleBlur}
         />
         <InputChild
           id={[id]}
-          className="employment--duration"
+          className="education--duration"
           text={duration}
           target="duration"
           type="text"
           handleBlur={handleBlur}
         />
-        <ul className="employment--tasks">
-          {tasks.map((item) => (
+        <ul className="education--details">
+          {details.map((item) => (
             <li key={item.id}>
               <InputChild
                 id={[id, item.id]}
                 text={item.data.input}
-                target="tasks"
+                target="details"
                 type="textarea"
                 handleBlur={handleBlur}
               />
               <DeleteButton
-                onClick={() => deleteTask('employment', 'tasks', id, item.id)}
-                whatToDelete="task"
+                onClick={() =>
+                  deleteDetail('education', 'details', id, item.id)
+                }
+                whatToDelete="detail"
               />
             </li>
           ))}

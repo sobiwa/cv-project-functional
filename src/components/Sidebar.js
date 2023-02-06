@@ -142,7 +142,7 @@ export default class Sidebar extends Component {
             <AddButton onClick={this.addLink} whatToAdd="link" />
             <button
               title="Toggle link functionality"
-              className="link-toggle-button"
+              className="icon-button link-toggle-button"
               type="button"
               onClick={() =>
                 this.setState((prevState) => ({ linksOn: !prevState.linksOn }))

@@ -1,4 +1,3 @@
-/* eslint-disable no-loop-func */
 import { Component } from 'react';
 import addIcon from '../../assets/add.svg';
 import deleteIcon from '../../assets/delete.svg';
@@ -12,19 +11,6 @@ export function handleBlur(section) {
     });
   };
 }
-
-// function findAndEdit(sect, ids) {
-//   const arrayCopy = [...ids];
-//   let editedSect;
-//   let currentId;
-//   while (arrayCopy.length) {
-//     currentId = arrayCopy.shift();
-//     editedSect = sect.map((item) =>
-//       item.id === currentId ? findAndEdit(item, arrayCopy) : item
-//     );
-//   }
-//   return;
-// }
 
 function findAndEdit(data, id, newText, target = 'data') {
   if (id.length === 1) {
@@ -44,7 +30,7 @@ function findAndEdit(data, id, newText, target = 'data') {
   const currentId = idArrayCopy.shift();
   return data.map((item) =>
     item.id === currentId
-      ? {...item, [target]: findAndEdit(item[target], idArrayCopy, newText)}
+      ? { ...item, [target]: findAndEdit(item[target], idArrayCopy, newText) }
       : item
   );
 }
@@ -52,7 +38,7 @@ function findAndEdit(data, id, newText, target = 'data') {
 export function AddButton({ onClick, whatToAdd }) {
   return (
     <button
-      className={`add-button add-${whatToAdd}-button`}
+      className={`icon-button add-button add-${whatToAdd}-button`}
       type="button"
       onClick={onClick}
     >
@@ -65,7 +51,7 @@ export class DeleteButton extends Component {
   render() {
     return (
       <button
-        className={`delete-button delete-${this.props.whatToDelete}-button`}
+        className={`icon-button delete-button delete-${this.props.whatToDelete}-button`}
         type="button"
         onClick={this.props.onClick}
       >
