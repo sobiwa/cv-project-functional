@@ -29,6 +29,34 @@
   font-size: calc(var(--page-width) / 60);
 }
 
+.print-button {
+  cursor: pointer;
+
+  width: 5rem;
+  height: 5rem;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 2rem;
+  border-radius: 50%;
+  appearance: none;
+  opacity: 0.3;
+  border: none;
+}
+
+.print-button img {
+  width: 100%;
+  height: auto;
+}
+
+.print-button:hover {
+  opacity: 1;
+}
+
+.print-button:active {
+  scale: 0.9;
+}
+
 .page-container {
   display: flex;
   flex-direction: column;

@@ -1,21 +1,23 @@
 import { Component } from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Main from './components/Main'
+import Main from './components/Main';
+import printIcon from './assets/print.svg';
 import './App.css';
 
 export default class App extends Component {
 
-  printPage = () => {
-    window.print();
-  }
   render() {
     return (
-    <div id='section-to-print' className="App">
-      <Main />
-      {/* <button onClick={this.printPage}>Print</button> */}
-
-    </div>
+      <div className="App">
+        <Main />
+        {/* <button onClick={this.printPage}>Print</button> */}
+        <button
+          className="print-button"
+          onClick={() => window.print()}
+          type="button"
+        >
+          <img src={printIcon} alt="print pages" />
+        </button>
+      </div>
     );
   }
 }

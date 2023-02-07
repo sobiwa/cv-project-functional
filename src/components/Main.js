@@ -194,8 +194,10 @@ export default class Main extends Component {
   }
 
   componentWillUnmount() {
+    console.log('main component unmounted');
     window.removeEventListener('resize', this.handleWindowResize);
   }
+
   render() {
     const pages = this.distributeItems();
     return (
