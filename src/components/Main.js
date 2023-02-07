@@ -1,19 +1,13 @@
 import { Component } from 'react';
-import Input from './Input';
-import { handleBlur, AddButton, DeleteButton } from './shared/helpers';
-import Employment from './Employment';
-import Education from './Education';
+import { handleBlur } from './shared/helpers';
+import PageOne from './PageOne';
+import Page from './Page';
 import uniqid from 'uniqid';
-import addTaskIcon from '../assets/add-task.svg';
-import profileIcon from '../assets/profileIcon.svg';
-import employmentIcon from '../assets/employment.svg';
-import educationIcon from '../assets/education.svg';
-import referenceIcon from '../assets/reference.svg';
 
 export default class Main extends Component {
   constructor(props) {
     super(props);
-    this.handleBlur = handleBlur;
+    this.handleBlur = handleBlur.bind(this);
   }
 
   newItem = (defaultText) => ({ input: defaultText, default: defaultText });
@@ -34,6 +28,7 @@ export default class Main extends Component {
       location: this.newItem('Cat Consultant at Feline Corp., New York'),
       duration: this.newItem('April 1993 - February 2023'),
       tasks: [this.newTask()],
+      height: 0,
     };
   };
 
@@ -43,16 +38,23 @@ export default class Main extends Component {
       school: this.newItem('Bachelor of Science, Cat University'),
       duration: this.newItem('August 2003 - May 2007'),
       details: [this.newDetail()],
+      height: 0,
     };
   };
 
+  retrieveDataOrRenderDefault = (item) => {
+    const creator =
+      item === 'employment'
+        ? this.createNewEmployment
+        : this.createNewEducation;
+    const dataRetrieved = JSON.parse(localStorage.getItem(item));
+    return dataRetrieved && dataRetrieved.length ? dataRetrieved : [creator()];
+  };
+
   state = {
-    employment: JSON.parse(localStorage.getItem('employment')) || [
-      this.createNewEmployment(),
-    ],
-    education: JSON.parse(localStorage.getItem('education')) || [
-      this.createNewEducation(),
-    ]
+    employment: this.retrieveDataOrRenderDefault('employment'),
+    education: this.retrieveDataOrRenderDefault('education'),
+    height: {},
   };
 
   addEmployment = () => {
@@ -99,97 +101,135 @@ export default class Main extends Component {
     }));
   };
 
+  distributeItems = () => {
+    console.log(this.state.height);
+    let currentPageNumber = 1;
+    const fullPageLength = this.state.height.page * 0.85;
+    const toBeSet = {
+      employment: [...this.state.employment],
+      education: [...this.state.education],
+    };
+    let currentItem;
+    const newPages = [
+      {
+        pageNum: 1,
+        employment: [],
+        education: [],
+        totalLength: this.state.height.header + this.state.height.profile,
+      },
+    ];
+    let [page] = newPages;
+
+    while (toBeSet.employment.length || toBeSet.education.length) {
+      const category = toBeSet.employment.length ? 'employment' : 'education';
+      currentItem = toBeSet[category].shift();
+      const defaultItemHeight = fullPageLength * 0.07;
+      const margin = defaultItemHeight * 0.1;
+      let currHeight =
+        currentItem.height === 0 ? defaultItemHeight : currentItem.height;
+      currHeight = currHeight + margin;
+      if (currHeight + page.totalLength > fullPageLength) {
+        currentPageNumber += 1;
+        page = {
+          pageNum: currentPageNumber,
+          employment: [],
+          education: [],
+          totalLength: 0,
+        };
+        newPages.push(page);
+      }
+      page.totalLength += currHeight;
+      page[category].push(currentItem);
+    }
+
+    const filteredPages = newPages.map((item) => ({
+      pageNum: item.pageNum,
+      employment: item.employment,
+      education: item.education,
+    }));
+
+    return filteredPages;
+  };
+
+  updateComponentHeight = (section, id, newHeight) => {
+    this.setState((prevState) => ({
+      [section]: prevState[section].map((item) =>
+        item.id === id ? { ...item, height: newHeight } : item
+      ),
+    }));
+  };
+
   componentDidUpdate() {
     localStorage.setItem('employment', JSON.stringify(this.state.employment));
+    localStorage.setItem('education', JSON.stringify(this.state.education));
+    if (this.checkSizes()) return;
+    this.updateHeights();
   }
+
+  updateHeights = () => {
+    this.setState({
+      height: {
+        page: document.querySelector('.page').clientHeight,
+        header: document.querySelector('.header').scrollHeight,
+        profile: document.querySelector('.profile').scrollHeight,
+      },
+    });
+  };
+
+  handleWindowResize = () => {
+    this.updateHeights();
+  };
+
+  checkSizes = () =>
+    this.state.height.page === document.querySelector('.page').clientHeight &&
+    this.state.height.header ===
+      document.querySelector('.header').scrollHeight &&
+    this.state.height.profile ===
+      document.querySelector('.profile').scrollHeight;
 
   componentDidMount() {
-    console.log(document.querySelector('.App').scrollHeight)
-    console.log(document.querySelector('.App').offsetHeight)
-    console.log(document.querySelector('.employment').scrollHeight)
-    console.log(document.querySelector('.employment-item').scrollHeight)
+    console.log('Main component mounted');
+    this.updateHeights();
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
   }
   render() {
+    const pages = this.distributeItems();
     return (
-      <main>
-        <section className="profile">
-          <div className='section-icon'><img src={profileIcon} alt='profile icon'/></div>
-          <div className='section-content'>
-            <h2 className="main--title">Profile</h2>
-            <Input id="profile" type="textarea" text="A little about yourself" />
-          </div>
-        </section>
-        <section className="employment">
-          <div className='section-icon'><img src={employmentIcon} alt='employment icon' /></div>
-          <div className='section-content'>
-            <h2 className="main--title">Employment History</h2>
-            {this.state.employment.map((item) => (
-              <div className="employment-item">
-                <Employment
-                  key={item.id}
-                  id={item.id}
-                  location={item.location.input}
-                  duration={item.duration.input}
-                  tasks={item.tasks}
-                  deleteTask={this.deleteNested}
-                  handleBlur={this.handleBlur('employment')}
-                />
-                <div className="flex-buttons employment--buttons">
-                  <button
-                    title="Add task"
-                    className="icon-button add-task-button"
-                    type="button"
-                    onClick={() => this.addNested('employment', 'tasks', item.id)}
-                  >
-                    <img src={addTaskIcon} alt="add task" />
-                  </button>
-                  <DeleteButton
-                    onClick={() => this.deleteItem(item.id, 'employment')}
-                    whatToDelete="employment"
-                  />
-                </div>
-              </div>
-            ))}
-            <AddButton onClick={this.addEmployment} whatToAdd="employment" />
-          </div>
-        </section>
-
-        {/*  */}
-        <section className="education">
-          <div className='section-icon'><img src={educationIcon} alt='education icon' /></div>
-          <div className='section-content'>
-            <h2 className="main--title">Education</h2>
-            {this.state.education.map((item) => (
-              <div className="education-item">
-                <Education
-                  key={item.id}
-                  id={item.id}
-                  school={item.school.input}
-                  duration={item.duration.input}
-                  details={item.details}
-                  deleteDetail={this.deleteNested}
-                  handleBlur={this.handleBlur('education')}
-                />
-                <div className="flex-buttons education--buttons">
-                  <button
-                    title="Add detail"
-                    className="icon-button add-detail-button"
-                    type="button"
-                    onClick={() => this.addNested('education', 'details', item.id)}
-                  >
-                    <img src={addTaskIcon} alt="add detail" />
-                  </button>
-                  <DeleteButton
-                    onClick={() => this.deleteItem(item.id, 'education')}
-                    whatToDelete="education"
-                  />
-                </div>
-              </div>
-            ))}
-            <AddButton onClick={this.addEducation} whatToAdd="education" />
-          </div>
-        </section>
-      </main>
+      <div className="page-container">
+        {pages.map((item) =>
+          item.pageNum === 1 ? (
+            <PageOne
+              key={item.pageNum}
+              employment={item.employment}
+              education={item.education}
+              handleBlur={this.handleBlur}
+              addEmployment={this.addEmployment}
+              addEducation={this.addEducation}
+              deleteItem={this.deleteItem}
+              addNested={this.addNested}
+              deleteNested={this.deleteNested}
+              updateComponentHeight={this.updateComponentHeight}
+            />
+          ) : (
+            <Page
+              key={item.pageNum}
+              employment={item.employment}
+              education={item.education}
+              handleBlur={this.handleBlur}
+              addEmployment={this.addEmployment}
+              addEducation={this.addEducation}
+              deleteItem={this.deleteItem}
+              addNested={this.addNested}
+              deleteNested={this.deleteNested}
+              updateComponentHeight={this.updateComponentHeight}
+            />
+          )
+        )}
+      </div>
     );
   }
 }

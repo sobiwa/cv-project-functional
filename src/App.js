@@ -12,8 +12,6 @@ export default class App extends Component {
   render() {
     return (
     <div id='section-to-print' className="App">
-      <Header />
-      <Sidebar />
       <Main />
       {/* <button onClick={this.printPage}>Print</button> */}
 

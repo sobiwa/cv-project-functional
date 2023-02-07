@@ -1,13 +1,34 @@
-import { Component } from 'react';
+import { createRef, Component } from 'react';
 import InputChild from './InputChild';
 import { DeleteButton } from './shared/helpers';
 
 export default class Employment extends Component {
+
+  divElement = createRef();
+
+  componentDidUpdate() {
+    if (this.props.height === this.divElement.current.scrollHeight) return;
+    this.props.updateComponentHeight(
+      'employment',
+      this.props.id,
+      this.divElement.current.scrollHeight
+    );
+  }
+
+  componentDidMount() {
+    if (this.props.height === this.divElement.current.scrollHeight) return;
+    this.props.updateComponentHeight(
+      'employment',
+      this.props.id,
+      this.divElement.current.scrollHeight
+    );
+  }
+
   render() {
     const { location, duration, tasks, deleteTask, handleBlur, id } =
       this.props;
     return (
-      <div>
+      <div ref={this.divElement}>
         <InputChild
           id={[id]}
           className="employment--location"

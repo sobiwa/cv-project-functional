@@ -1,13 +1,33 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import InputChild from './InputChild';
 import { DeleteButton } from './shared/helpers';
 
 export default class Education extends Component {
+  divElement = createRef();
+
+  componentDidUpdate() {
+    if (this.props.height === this.divElement.current.scrollHeight) return;
+    this.props.updateComponentHeight(
+      'education',
+      this.props.id,
+      this.divElement.current.scrollHeight
+    );
+  }
+
+  componentDidMount() {
+    if (this.props.height === this.divElement.current.scrollHeight) return;
+    this.props.updateComponentHeight(
+      'education',
+      this.props.id,
+      this.divElement.current.scrollHeight
+    );
+  }
+
   render() {
     const { school, duration, details, deleteDetail, handleBlur, id } =
       this.props;
     return (
-      <div>
+      <div ref={this.divElement}>
         <InputChild
           id={[id]}
           className="education--school"
