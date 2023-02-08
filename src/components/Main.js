@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { handleBlur } from './shared/helpers';
 import PageOne from './PageOne';
-import Page from './Page';
+import PageMain from './PageMain';
 import uniqid from 'uniqid';
 
 export default class Main extends Component {
@@ -27,7 +27,7 @@ export default class Main extends Component {
       id: uniqid(),
       location: this.newItem('Cat Consultant at Feline Corp., New York'),
       duration: this.newItem('April 1993 - February 2023'),
-      tasks: [this.newTask()],
+      subChildren: [this.newTask()],
       height: 0,
     };
   };
@@ -35,64 +35,80 @@ export default class Main extends Component {
   createNewEducation = () => {
     return {
       id: uniqid(),
-      school: this.newItem('Bachelor of Science, Cat University'),
+      location: this.newItem('Bachelor of Science, Cat University'),
       duration: this.newItem('August 2003 - May 2007'),
-      details: [this.newDetail()],
+      subChildren: [this.newDetail()],
       height: 0,
     };
   };
 
-  retrieveDataOrRenderDefault = (item) => {
-    const creator =
-      item === 'employment'
-        ? this.createNewEmployment
-        : this.createNewEducation;
-    const dataRetrieved = JSON.parse(localStorage.getItem(item));
-    return dataRetrieved && dataRetrieved.length ? dataRetrieved : [creator()];
+  createNewReference = () => {
+    return {
+      id: uniqid(),
+      contact: this.newItem('Joey Pantalones'),
+      email: this.newItem('joeyPants@pmail.com'),
+      phone: this.newItem('(444) 555 - 6666'),
+      height: 0,
+    };
+  };
+
+  creator = (section) => {
+    switch (section) {
+      case 'employment':
+        return this.createNewEmployment();
+      case 'education':
+        return this.createNewEducation();
+      case 'references':
+        return this.createNewReference();
+      default:
+        return;
+    }
+  };
+
+  retrieveDataOrRenderDefault = (section) => {
+    const dataRetrieved = JSON.parse(localStorage.getItem(section));
+    return dataRetrieved && dataRetrieved.length
+      ? dataRetrieved
+      : [this.creator(section)];
   };
 
   state = {
     employment: this.retrieveDataOrRenderDefault('employment'),
     education: this.retrieveDataOrRenderDefault('education'),
+    references: this.retrieveDataOrRenderDefault('references'),
     height: {},
   };
 
-  addEmployment = () => {
+  addItem = (section) => {
     this.setState((prevState) => ({
-      employment: [...prevState.employment, this.createNewEmployment()],
+      [section]: [...prevState[section], this.creator(section)],
     }));
   };
 
-  addEducation = () => {
+  deleteItem = (id, section) => {
     this.setState((prevState) => ({
-      education: [...prevState.education, this.createNewEducation()],
+      [section]: prevState[section].filter((item) => item.id !== id),
     }));
   };
 
-  deleteItem = (id, target) => {
-    this.setState((prevState) => ({
-      [target]: prevState[target].filter((item) => item.id !== id),
-    }));
-  };
-
-  addNested = (section, subSection, id) => {
-    const creator = subSection === 'tasks' ? this.newTask : this.newDetail;
+  addSubChild = (section, id) => {
+    const subCreator = section === 'employment' ? this.newTask : this.newDetail;
     this.setState((prevState) => ({
       [section]: prevState[section].map((item) =>
         item.id === id
-          ? { ...item, [subSection]: [...item[subSection], creator()] }
+          ? { ...item, subChildren: [...item.subChildren, subCreator()] }
           : item
       ),
     }));
   };
 
-  deleteNested = (section, subSection, id, nestedId) => {
+  deleteSubChild = (section, id, nestedId) => {
     this.setState((prevState) => ({
       [section]: prevState[section].map((item) =>
         item.id === id
           ? {
               ...item,
-              [subSection]: item[subSection].filter(
+              subChildren: item.subChildren.filter(
                 (nested) => nested.id !== nestedId
               ),
             }
@@ -104,48 +120,51 @@ export default class Main extends Component {
   distributeItems = () => {
     console.log(this.state.height);
     let currentPageNumber = 1;
-    const fullPageLength = this.state.height.page * 0.85;
-    const toBeSet = {
-      employment: [...this.state.employment],
-      education: [...this.state.education],
-    };
-    let currentItem;
-    const newPages = [
-      {
-        pageNum: 1,
+    const fullPageLength = this.state.height.page * 0.93;
+    const titleHeight = fullPageLength * 0.05;
+    function newPage(num) {
+      return {
+        pageNum: num,
         employment: [],
         education: [],
-        totalLength: this.state.height.header + this.state.height.profile,
-      },
-    ];
+        references: [],
+        totalLength: 0,
+      };
+    }
+    const { header, profile } = this.state.height;
+    const newPages = [{ ...newPage(1), totalLength: header + profile }];
     let [page] = newPages;
 
-    while (toBeSet.employment.length || toBeSet.education.length) {
-      const category = toBeSet.employment.length ? 'employment' : 'education';
-      currentItem = toBeSet[category].shift();
-      const defaultItemHeight = fullPageLength * 0.07;
-      const margin = defaultItemHeight * 0.1;
-      let currHeight =
-        currentItem.height === 0 ? defaultItemHeight : currentItem.height;
-      currHeight = currHeight + margin;
-      if (currHeight + page.totalLength > fullPageLength) {
-        currentPageNumber += 1;
-        page = {
-          pageNum: currentPageNumber,
-          employment: [],
-          education: [],
-          totalLength: 0,
-        };
-        newPages.push(page);
+    const layoutSection = (section) => {
+      page.totalLength += titleHeight;
+      const sectionCopy = [...this.state[section]];
+      let currentItem;
+      while (sectionCopy.length) {
+        currentItem = sectionCopy.shift();
+        const defaultItemHeight = fullPageLength * 0.07;
+        const margin = defaultItemHeight * 0.1;
+        let currHeight =
+          currentItem.height === 0 ? defaultItemHeight : currentItem.height;
+        currHeight += margin;
+        if (currHeight + page.totalLength > fullPageLength) {
+          currentPageNumber += 1;
+          page = newPage(currentPageNumber);
+          newPages.push(page);
+        }
+        page.totalLength += currHeight;
+        page[section].push(currentItem);
       }
-      page.totalLength += currHeight;
-      page[category].push(currentItem);
     }
+
+    layoutSection('employment');
+    layoutSection('education');
+    layoutSection('references');
 
     const filteredPages = newPages.map((item) => ({
       pageNum: item.pageNum,
       employment: item.employment,
       education: item.education,
+      references: item.references
     }));
 
     return filteredPages;
@@ -162,6 +181,7 @@ export default class Main extends Component {
   componentDidUpdate() {
     localStorage.setItem('employment', JSON.stringify(this.state.employment));
     localStorage.setItem('education', JSON.stringify(this.state.education));
+    localStorage.setItem('references', JSON.stringify(this.state.references));
     if (this.checkSizes()) return;
     this.updateHeights();
   }
@@ -208,27 +228,28 @@ export default class Main extends Component {
               key={item.pageNum}
               employment={item.employment}
               education={item.education}
+              references={item.references}
               handleBlur={this.handleBlur}
-              addEmployment={this.addEmployment}
-              addEducation={this.addEducation}
+              addItem={this.addItem}
               deleteItem={this.deleteItem}
-              addNested={this.addNested}
-              deleteNested={this.deleteNested}
+              addSubChild={this.addSubChild}
+              deleteSubChild={this.deleteSubChild}
               updateComponentHeight={this.updateComponentHeight}
             />
           ) : (
-            <Page
-              key={item.pageNum}
-              employment={item.employment}
-              education={item.education}
-              handleBlur={this.handleBlur}
-              addEmployment={this.addEmployment}
-              addEducation={this.addEducation}
-              deleteItem={this.deleteItem}
-              addNested={this.addNested}
-              deleteNested={this.deleteNested}
-              updateComponentHeight={this.updateComponentHeight}
-            />
+            <div className="page" key={item.pageNum}>
+              <PageMain
+                employment={item.employment}
+                education={item.education}
+                references={item.references}
+                handleBlur={this.handleBlur}
+                addItem={this.addItem}
+                deleteItem={this.deleteItem}
+                addSubChild={this.addSubChild}
+                deleteSubChild={this.deleteSubChild}
+                updateComponentHeight={this.updateComponentHeight}
+              />
+            </div>
           )
         )}
       </div>

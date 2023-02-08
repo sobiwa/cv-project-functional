@@ -31,7 +31,6 @@
 
 .print-button {
   cursor: pointer;
-
   width: 5rem;
   height: 5rem;
   position: fixed;
@@ -81,7 +80,6 @@
   display: flex;
   gap: 1rem;
   align-items: center;
-  /* justify-content: space-between; */
 }
 
 .header--image-upload-label {
@@ -187,7 +185,6 @@ textarea,
 input,
 .expander,
 .true-text {
-  /* box-sizing: border-box; */
   line-height: 1.5em;
   font-weight: inherit;
   font-size: inherit;
@@ -239,8 +236,7 @@ input:focus + .focus-indicator {
 }
 
 .sidebar--link,
-.employment-item,
-.education-item {
+.section-item {
   position: relative;
 }
 
@@ -250,11 +246,7 @@ input:focus + .focus-indicator {
   padding-bottom: 0.5em;
 }
 
-.add-button,
-.delete-button,
-.link-toggle-button,
-.add-task-button,
-.add-detail-button {
+.icon-button {
   opacity: 0.3;
   display: none;
   border-radius: 50%;
@@ -290,8 +282,8 @@ input:focus + .focus-indicator {
   background: radial-gradient(rgba(93, 206, 255, 0.29), rgb(93, 206, 255));
 }
 
-.add-task-button,
-.add-detail-button {
+.add-sub-child-button,
+.add-sub-child-button {
   padding: 0.2em;
   background: radial-gradient(rgba(222, 255, 88, 0.456), rgb(222, 255, 88));
 }
@@ -306,19 +298,14 @@ input:focus + .focus-indicator {
 .sidebar--link:hover .icon-button,
 .sidebar--links:hover .add-link-button,
 .sidebar--links:hover .link-toggle-button,
-.employment:hover .add-employment-button,
-.employment-item:hover .delete-employment-button,
-.employment-item:hover .add-task-button,
-.employment--tasks li:hover .delete-task-button,
-.education-item:hover .delete-education-button,
-.education:hover .add-education-button,
-.education-item:hover .add-detail-button,
-.education--details li:hover .delete-detail-button {
+.section-item:hover .delete-item-button,
+.section-item:hover .add-sub-child-button,
+.section--sub-children li:hover .delete-sub-child-button,
+.section-content:hover .add-item-button {
   display: flex;
 }
 
-.delete-employment-button,
-.delete-education-button {
+.delete-item-button {
   position: relative;
   /* margin: 0 0 auto auto; */
 }
@@ -333,8 +320,7 @@ input:focus + .focus-indicator {
 
 .add-button img,
 .link-toggle-button img,
-.add-task-button img,
-.add-detail-button img {
+.add-sub-child-button img {
   height: 100%;
   width: 100%;
 }
@@ -372,12 +358,16 @@ main {
 }
 
 .employment--location,
-.education--school {
+.education--location,
+.reference--contact {
   font-size: 1.1rem;
+}
+
+.employment--location {
   font-weight: 600;
 }
 
-.education--school {
+.education--location {
   font-weight: 400;
 }
 
@@ -386,30 +376,41 @@ main {
   color: gray;
   font-weight: 500;
 }
-.employment--tasks,
-.education--details {
+.section--sub-children {
   margin: 0;
   padding: 0.5rem 0 0 3rem;
   list-style: disc;
 }
 
-.employment--tasks li,
-.education--details li {
+.section--sub-children li{
   position: relative;
 }
 
-.employment--tasks li .delete-task-button,
-.education--details li .delete-detail-button {
+.section--sub-children li .delete-sub-child-button {
   height: 1.1rem;
   width: 1.1rem;
 }
 
 .employment--buttons,
-.education--buttons {
+.education--buttons,
+.reference--buttons {
   padding: 0;
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.ref--contact-info {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.reference--email {
+  font-size: 0.9rem;
+  vertical-align:text-bottom;
+}
+
+.reference--phone {
 }
 
 @media print {
