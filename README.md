@@ -8,6 +8,8 @@ Features to be added:
 
 - drag and drop functionality to rearrange page
 
+- add icon selection for links in addition or as an alternative to typing website name
+
 - possible link toggle for email addresses
 
 Refactoring: 
