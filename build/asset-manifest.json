@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.63e831a1.css",
+    "main.js": "/static/js/main.42ee2393.js",
+    "static/media/inter-variablefont_slntwght-webfont.woff": "/static/media/inter-variablefont_slntwght-webfont.93ac38cea20220bbb7fa.woff",
+    "static/media/karla-italic-variablefont_wght-webfont.woff": "/static/media/karla-italic-variablefont_wght-webfont.b26f7bfefa8cba3f7c34.woff",
+    "static/media/karla-variablefont_wght-webfont.woff": "/static/media/karla-variablefont_wght-webfont.85643ca024271a390a2b.woff",
+    "static/media/inter-variablefont_slntwght-webfont.woff2": "/static/media/inter-variablefont_slntwght-webfont.139f50ba20afb4ee5c4f.woff2",
+    "static/media/karla-italic-variablefont_wght-webfont.woff2": "/static/media/karla-italic-variablefont_wght-webfont.abcfca4cb4ac5ebacdaa.woff2",
+    "static/media/karla-variablefont_wght-webfont.woff2": "/static/media/karla-variablefont_wght-webfont.0c39733bf385a95899b5.woff2",
+    "static/media/profile.svg": "/static/media/profile.c08e05b800d95b063c76b816059be845.svg",
+    "static/media/add-task.svg": "/static/media/add-task.0afaf96cc6292d2473cea1387cc3d242.svg",
+    "static/media/profileIcon.svg": "/static/media/profileIcon.122b5faf1085d00ea03dd63b5e85d047.svg",
+    "index.html": "/index.html",
+    "static/media/employment.svg": "/static/media/employment.eab728c57d99856a9a7221138b4375d4.svg",
+    "static/media/link-off.svg": "/static/media/link-off.c17f174f3011badca56fdb78e763e463.svg",
+    "static/media/print.svg": "/static/media/print.721e7d4ecceebf31328f8a04a25af4f3.svg",
+    "static/media/reference.svg": "/static/media/reference.438ee181b942c9b2b4b8dce83445add0.svg",
+    "static/media/link.svg": "/static/media/link.143b4faa0614e6c884d09f47bbf8c9fd.svg",
+    "static/media/delete.svg": "/static/media/delete.3270f2c93c8c138fa6cc69fbd18f985e.svg",
+    "static/media/education.svg": "/static/media/education.2f6d1be5ec3a74e5207a8a9b6fc8dd00.svg",
+    "static/media/add.svg": "/static/media/add.46ae0e09d1132337aa923311b95c4996.svg",
+    "main.63e831a1.css.map": "/static/css/main.63e831a1.css.map",
+    "main.42ee2393.js.map": "/static/js/main.42ee2393.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.63e831a1.css",
+    "static/js/main.42ee2393.js"
+  ]
+}
