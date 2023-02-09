@@ -9,7 +9,6 @@ export default class App extends Component {
     return (
       <div className="App">
         <Main />
-        {/* <button onClick={this.printPage}>Print</button> */}
         <button
           className="print-button"
           onClick={() => window.print()}
