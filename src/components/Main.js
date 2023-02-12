@@ -1,110 +1,150 @@
-import { Component } from 'react';
-import { handleBlur } from './shared/helpers';
-import PageOne from './PageOne';
+import { useState, useEffect } from 'react';
+import {
+  handleBlur,
+  newItem,
+  retrieveDataOrRenderDefault,
+} from './shared/helpers';
+import Header from './Header';
+import Sidebar from './Sidebar';
 import PageMain from './PageMain';
+import Profile from './Profile';
+import layoutIcon from '../assets/layout.svg';
+import Layout from './Layout';
 import uniqid from 'uniqid';
 
-export default class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.handleBlur = handleBlur.bind(this);
-  }
-
-  newItem = (defaultText) => ({ input: defaultText, default: defaultText });
-  newTask = () => ({
+export default function Main() {
+  const newTask = () => ({
     id: uniqid(),
-    data: this.newItem(
+    data: newItem(
       'Pet cats and ensured they received abundant quantities of love.'
     ),
   });
-  newDetail = () => ({
+  const newDetail = () => ({
     id: uniqid(),
-    data: this.newItem('GPA: 4.0'),
+    data: newItem('GPA: 4.0'),
   });
 
-  createNewEmployment = () => {
+  const createNewEmployment = () => {
     return {
       id: uniqid(),
-      location: this.newItem('Cat Consultant at Feline Corp., New York'),
-      duration: this.newItem('April 1993 - February 2023'),
-      subChildren: [this.newTask()],
+      location: newItem('Cat Consultant at Feline Corp., New York'),
+      duration: newItem('April 1993 - February 2023'),
+      subChildren: [newTask()],
       height: 0,
     };
   };
 
-  createNewEducation = () => {
+  const createNewEducation = () => {
     return {
       id: uniqid(),
-      location: this.newItem('Bachelor of Science, Cat University'),
-      duration: this.newItem('August 2003 - May 2007'),
-      subChildren: [this.newDetail()],
+      location: newItem('Bachelor of Science, Cat University'),
+      duration: newItem('August 2003 - May 2007'),
+      subChildren: [newDetail()],
       height: 0,
     };
   };
 
-  createNewReference = () => {
+  const createNewReference = () => {
     return {
       id: uniqid(),
-      contact: this.newItem('Joey Pantalones'),
-      email: this.newItem('joeyPants@pmail.com'),
-      phone: this.newItem('(444) 555 - 6666'),
+      contact: newItem('Joey Pantalones'),
+      email: newItem('joeyPants@pmail.com'),
+      phone: newItem('(444) 555 - 6666'),
       height: 0,
     };
   };
 
-  creator = (section) => {
+  const creator = (section) => {
     switch (section) {
       case 'employment':
-        return this.createNewEmployment();
+        return createNewEmployment();
       case 'education':
-        return this.createNewEducation();
+        return createNewEducation();
       case 'references':
-        return this.createNewReference();
+        return createNewReference();
       default:
         return;
     }
   };
 
-  retrieveDataOrRenderDefault = (section) => {
-    const dataRetrieved = JSON.parse(localStorage.getItem(section));
-    return dataRetrieved && dataRetrieved.length
-      ? dataRetrieved
-      : [this.creator(section)];
-  };
+  const [profile, setProfile] = useState(
+    JSON.parse(localStorage.getItem('profile')) || {
+      text: newItem(
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae enim ac enim mattis luctus. Maecenas ut velit mauris. Donec pretium elit porttitor augue condimentum, eget vulputate nibh ultrices.'
+      ),
+      height: 0,
+    }
+  );
 
-  state = {
-    employment: this.retrieveDataOrRenderDefault('employment'),
-    education: this.retrieveDataOrRenderDefault('education'),
-    references: this.retrieveDataOrRenderDefault('references'),
-    height: {},
-  };
+  const [employment, setEmployment] = useState(
+    retrieveDataOrRenderDefault('employment', creator)
+  );
+  const [education, setEducation] = useState(
+    retrieveDataOrRenderDefault('education', creator)
+  );
+  const [references, setReferences] = useState(
+    retrieveDataOrRenderDefault('references', creator)
+  );
+  const [height, setHeight] = useState({});
 
-  addItem = (section) => {
-    this.setState((prevState) => ({
-      [section]: [...prevState[section], this.creator(section)],
+  const [layoutDisplay, setLayoutDisplay] = useState({
+    image: true,
+    jobTitle: true,
+    details: true,
+    skills: true,
+    links: true,
+    profile: true,
+    employment: true,
+    education: true,
+    references: true,
+    phone: true,
+  });
+
+  const [showLayoutDisplay, setShowLayoutDisplay] = useState(false);
+
+  const toggleDisplay = (area, subArea) => {
+    setLayoutDisplay((prev) => ({
+      ...prev,
+      [area]: { ...prev[area], [subArea]: !prev[area][subArea] },
     }));
   };
 
-  deleteItem = (id, section) => {
-    this.setState((prevState) => ({
-      [section]: prevState[section].filter((item) => item.id !== id),
+  const updateProfile = (newText) => {
+    setProfile((prev) => ({
+      ...prev,
+      text: {
+        ...prev.text,
+        input: newText === '' ? prev.text.default : newText,
+      },
     }));
   };
 
-  addSubChild = (section, id) => {
-    const subCreator = section === 'employment' ? this.newTask : this.newDetail;
-    this.setState((prevState) => ({
-      [section]: prevState[section].map((item) =>
+  const updateProfileHeight = (newHeight) => {
+    setProfile((prev) => ({ ...prev, height: newHeight }));
+  };
+
+  const addItem = (section, set) => {
+    set((prevState) => [...prevState, creator(section)]);
+  };
+
+  const deleteItem = (id, set) => {
+    set((prevState) => prevState.filter((item) => item.id !== id));
+  };
+
+  const addSubChild = (section, id, set) => {
+    const subCreator = section === 'employment' ? newTask : newDetail;
+    set((prevState) =>
+      prevState.map((item) =>
         item.id === id
           ? { ...item, subChildren: [...item.subChildren, subCreator()] }
           : item
-      ),
-    }));
+      )
+    );
   };
 
-  deleteSubChild = (section, id, nestedId) => {
-    this.setState((prevState) => ({
-      [section]: prevState[section].map((item) =>
+  const deleteSubChild = (id, nestedId, set) => {
+    set((prevState) =>
+      prevState.map((item) =>
         item.id === id
           ? {
               ...item,
@@ -113,15 +153,14 @@ export default class Main extends Component {
               ),
             }
           : item
-      ),
-    }));
+      )
+    );
   };
 
-  distributeItems = () => {
-    console.log(this.state.height);
+  const distributeItems = () => {
     let currentPageNumber = 1;
-    const fullPageLength = this.state.height.page * 0.93;
-    const titleHeight = fullPageLength * 0.05;
+    const fullPageLength = height.page * 0.93;
+    const titleHeight = height.heading;
     function newPage(num) {
       return {
         pageNum: num,
@@ -131,13 +170,20 @@ export default class Main extends Component {
         totalLength: 0,
       };
     }
-    const { header, profile } = this.state.height;
-    const newPages = [{ ...newPage(1), totalLength: header + profile }];
+    const newPages = [
+      { ...newPage(1), totalLength: height.header + profile.height },
+    ];
     let [page] = newPages;
 
     const layoutSection = (section) => {
+      const stateVar =
+        section === 'employment'
+          ? employment
+          : section === 'education'
+          ? education
+          : references;
       page.totalLength += titleHeight;
-      const sectionCopy = [...this.state[section]];
+      const sectionCopy = [...stateVar];
       let currentItem;
       while (sectionCopy.length) {
         currentItem = sectionCopy.shift();
@@ -154,7 +200,7 @@ export default class Main extends Component {
         page.totalLength += currHeight;
         page[section].push(currentItem);
       }
-    }
+    };
 
     layoutSection('employment');
     layoutSection('education');
@@ -164,95 +210,108 @@ export default class Main extends Component {
       pageNum: item.pageNum,
       employment: item.employment,
       education: item.education,
-      references: item.references
+      references: item.references,
     }));
 
     return filteredPages;
   };
 
-  updateComponentHeight = (section, id, newHeight) => {
-    this.setState((prevState) => ({
-      [section]: prevState[section].map((item) =>
+  const updateComponentHeight = (id, newHeight, set) => {
+    set((prevState) =>
+      prevState.map((item) =>
         item.id === id ? { ...item, height: newHeight } : item
-      ),
-    }));
+      )
+    );
   };
 
-  componentDidUpdate() {
-    localStorage.setItem('employment', JSON.stringify(this.state.employment));
-    localStorage.setItem('education', JSON.stringify(this.state.education));
-    localStorage.setItem('references', JSON.stringify(this.state.references));
-    if (this.checkSizes()) return;
-    this.updateHeights();
-  }
+  useEffect(() => {
+    localStorage.setItem('profile', JSON.stringify(profile));
+  }, [profile]);
 
-  updateHeights = () => {
-    this.setState({
-      height: {
-        page: document.querySelector('.page').clientHeight,
-        header: document.querySelector('.header').scrollHeight,
-        profile: document.querySelector('.profile').scrollHeight,
-      },
+  useEffect(() => {
+    localStorage.setItem('employment', JSON.stringify(employment));
+  }, [employment]);
+
+  useEffect(() => {
+    localStorage.setItem('education', JSON.stringify(education));
+  }, [education]);
+
+  useEffect(() => {
+    localStorage.setItem('references', JSON.stringify(references));
+  }, [references]);
+
+  const updateHeights = () => {
+    setHeight({
+      page: document.querySelector('.page').clientHeight,
+      header: document.querySelector('.header').scrollHeight,
+      heading: document.querySelector('.main--title').scrollHeight,
     });
   };
 
-  handleWindowResize = () => {
-    this.updateHeights();
-  };
+  useEffect(() => {
+    updateHeights();
+    window.addEventListener('resize', updateHeights);
 
-  checkSizes = () =>
-    this.state.height.page === document.querySelector('.page').clientHeight &&
-    this.state.height.header ===
-      document.querySelector('.header').scrollHeight &&
-    this.state.height.profile ===
-      document.querySelector('.profile').scrollHeight;
+    return () => {
+      window.removeEventListener('resize', updateHeights);
+    };
+  }, []);
 
-  componentDidMount() {
-    console.log('Main component mounted');
-    this.updateHeights();
-    window.addEventListener('resize', this.handleWindowResize);
-  }
-
-  componentWillUnmount() {
-    console.log('main component unmounted');
-    window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  render() {
-    const pages = this.distributeItems();
-    return (
-      <div className="page-container">
-        {pages.map((item) =>
-          item.pageNum === 1 ? (
-            <PageOne
-              key={item.pageNum}
-              employment={item.employment}
-              education={item.education}
-              references={item.references}
-              handleBlur={this.handleBlur}
-              addItem={this.addItem}
-              deleteItem={this.deleteItem}
-              addSubChild={this.addSubChild}
-              deleteSubChild={this.deleteSubChild}
-              updateComponentHeight={this.updateComponentHeight}
-            />
-          ) : (
-            <div className="page" key={item.pageNum}>
+  const pages = distributeItems();
+  return (
+    <div className="page-container">
+      <button className="layout-button" type="button" onClick={() => setShowLayoutDisplay(prev => !prev)}>
+        <img src={layoutIcon} alt="layout settings" />
+      </button>
+      {showLayoutDisplay && <Layout layoutDisplay={layoutDisplay} setLayoutDisplay={setLayoutDisplay} hide={setShowLayoutDisplay}/>}
+      {pages.map((item) =>
+        item.pageNum === 1 ? (
+          <div key={item.pageNum} className="page page-one">
+            <Header />
+            <Sidebar />
+            <main>
+              <Profile
+                pageHeight={height.page}
+                handleBlur={updateProfile}
+                height={profile.height}
+                updateHeight={updateProfileHeight}
+                text={profile.text.input}
+              />
               <PageMain
                 employment={item.employment}
+                setEmployment={setEmployment}
                 education={item.education}
+                setEducation={setEducation}
                 references={item.references}
-                handleBlur={this.handleBlur}
-                addItem={this.addItem}
-                deleteItem={this.deleteItem}
-                addSubChild={this.addSubChild}
-                deleteSubChild={this.deleteSubChild}
-                updateComponentHeight={this.updateComponentHeight}
+                setReferences={setReferences}
+                handleBlur={handleBlur}
+                addItem={addItem}
+                deleteItem={deleteItem}
+                addSubChild={addSubChild}
+                deleteSubChild={deleteSubChild}
+                updateComponentHeight={updateComponentHeight}
               />
-            </div>
-          )
-        )}
-      </div>
-    );
-  }
+            </main>
+          </div>
+        ) : (
+          <div className="page" key={item.pageNum}>
+            <PageMain
+              employment={item.employment}
+              setEmployment={setEmployment}
+              education={item.education}
+              setEducation={setEducation}
+              references={item.references}
+              setReferences={setReferences}
+              handleBlur={handleBlur}
+              addItem={addItem}
+              deleteItem={deleteItem}
+              addSubChild={addSubChild}
+              deleteSubChild={deleteSubChild}
+              updateComponentHeight={updateComponentHeight}
+            />
+          </div>
+        )
+      )}
+    </div>
+  );
 }

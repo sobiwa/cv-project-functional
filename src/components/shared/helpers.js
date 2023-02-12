@@ -2,13 +2,9 @@ import { Component } from 'react';
 import addIcon from '../../assets/add.svg';
 import deleteIcon from '../../assets/delete.svg';
 
-export function handleBlur(section) {
-  return (newText, target, ids) => {
-    this.setState((prevState) => {
-      return {
-        [section]: findAndEdit(prevState[section], ids, newText, target),
-      };
-    });
+export function handleBlur(set, target, ids) {
+  return (newText) => {
+    set((prevState) => findAndEdit(prevState, ids, newText, target));
   };
 }
 
@@ -34,6 +30,18 @@ function findAndEdit(data, id, newText, target = 'data') {
       : item
   );
 }
+
+export const newItem = (defaultText) => ({
+  input: defaultText,
+  default: defaultText,
+});
+
+export const retrieveDataOrRenderDefault = (section, creator) => {
+  const dataRetrieved = JSON.parse(localStorage.getItem(section));
+  return dataRetrieved && dataRetrieved.length
+    ? dataRetrieved
+    : [creator(section)];
+};
 
 export function AddButton({ onClick, whatToAdd }) {
   return (

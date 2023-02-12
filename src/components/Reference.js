@@ -1,60 +1,47 @@
-import { Component, createRef } from 'react';
+import { useRef, useEffect } from 'react';
 import InputChild from './InputChild';
 
-export default class Reference extends Component {
-  divElement = createRef();
+export default function Reference({
+  id,
+  height,
+  updateComponentHeight,
+  set,
+  contact,
+  email,
+  phone,
+  handleBlur,
+}) {
+  const divElement = useRef(0);
 
-  componentDidUpdate() {
-    if (this.props.height === this.divElement.current.scrollHeight) return;
-    this.props.updateComponentHeight(
-      this.props.section,
-      this.props.id,
-      this.divElement.current.scrollHeight
-    );
-  }
+  useEffect(() => {
+    if (height !== divElement.current.scrollHeight) {
+      updateComponentHeight(id, divElement.current.scrollHeight, set);
+    }
+  });
 
-  componentDidMount() {
-    if (this.props.height === this.divElement.current.scrollHeight) return;
-    this.props.updateComponentHeight(
-      this.props.section,
-      this.props.id,
-      this.divElement.current.scrollHeight
-    );
-  }
-
-  render() {
-    const {contact, email, phone, handleBlur, id } =
-      this.props;
-    return (
-      <div ref={this.divElement}>
+  return (
+    <div ref={divElement}>
+      <InputChild
+        className="reference--contact"
+        text={contact}
+        type="text"
+        handleBlur={handleBlur(set, 'contact', [id])}
+      />
+      <div className="ref--contact-info">
         <InputChild
-          id={[id]}
-          className='reference--contact'
-          text={contact}
-          target="contact"
-          type="text"
-          handleBlur={handleBlur}
+          className={'reference--email'}
+          text={email}
+          type="email"
+          handleBlur={handleBlur(set, 'email', [id])}
         />
-        <div className="ref--contact-info">
-          <InputChild
-            id={[id]}
-            className={'reference--email'}
-            text={email}
-            target="email"
-            type="email"
-            handleBlur={handleBlur}
-          />
-          |
-          <InputChild
-            id={[id]}
-            className={'reference--phone'}
-            text={phone}
-            target='phone'
-            type='tel'
-            handleBlur={handleBlur}
-          />
-        </div>
+        |
+        <InputChild
+          className={'reference--phone'}
+          text={phone}
+          type="tel"
+          handleBlur={handleBlur(set, 'phone', [id])}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }

@@ -1,27 +1,29 @@
-import { Component } from 'react';
 import Reference from './Reference';
 import referenceIcon from '../assets/reference.svg'
 import Section from './Section';
 import { AddButton, DeleteButton } from './shared/helpers';
 
-export default class PageMain extends Component {
-  render() {
-    const {
-      employment,
-      education,
-      references,
-      handleBlur,
-      addItem,
-      deleteItem,
-      addSubChild,
-      deleteSubChild,
-      updateComponentHeight,
-    } = this.props;
+export default function PageMain ({
+  employment,
+  setEmployment,
+  education,
+  setEducation,
+  references,
+  setReferences,
+  handleBlur,
+  addItem,
+  deleteItem,
+  addSubChild,
+  deleteSubChild,
+  updateComponentHeight,
+}) {
+
     return (
       <div>
           {employment.length > 0 && (
             <Section 
             section='employment'
+            set={setEmployment}
             items={employment}
             addItem={addItem}
             deleteItem={deleteItem}
@@ -33,6 +35,7 @@ export default class PageMain extends Component {
           {education.length > 0 && (
             <Section 
             section='education'
+            set={setEducation}
             items={education}
             addItem={addItem}
             deleteItem={deleteItem}
@@ -52,29 +55,29 @@ export default class PageMain extends Component {
                 {references.map((item) => (
                   <div key={item.id} className='section-item'>
                     <Reference
+                      section='references'
+                      set={setReferences}
                       id={item.id}
                       contact={item.contact.input}
                       email={item.email.input}
                       phone={item.phone.input}
-                      section='references'
-                      handleBlur={handleBlur('references')}
+                      handleBlur={handleBlur}
                       updateComponentHeight={updateComponentHeight}
                       height={item.height}
                     />
                     <div className='flex-buttons reference--buttons'>
                       <DeleteButton
-                        onClick={() => deleteItem(item.id, 'references')}
+                        onClick={() => deleteItem(item.id, setReferences)}
                         whatToDelete='item'
                       />
                     </div>
                   </div>
                 ))}
               </div>
-              <AddButton onClick={() => addItem('references')} whatToAdd='item' />
+              <AddButton onClick={() => addItem('references', setReferences)} whatToAdd='item' />
             </div>
           </section>
           )}
         </div>
     )
   }
-}

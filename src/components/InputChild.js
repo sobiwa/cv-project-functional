@@ -1,72 +1,63 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
-export default class InputChild extends Component {
-  //props to be sent are TEXT, HANDLEBLUR, TYPE
-  constructor(props) {
-    super(props);
+export default function InputChild({
+  className,
+  text,
+  type,
+  handleBlur,
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputText, setInputText] = useState(text);
 
-    this.state = {
-      isEditing: false,
-      text: props.text,
-    };
-  }
-
-  handleChange = (e) => {
-    this.setState({ text: e.target.value });
+  const handleChange = (e) => {
+    setInputText(e.target.value);
   };
 
-  handleFocus = (e) => {
+  const handleFocus = (e) => {
     e.target.select();
   };
 
-  handleBlur = () => {
-    this.setState({ isEditing: false });
-    this.props.handleBlur(
-      this.state.text,
-      this.props.target,
-      this.props.id
-    );
+  const inputHandleBlur = () => {
+    setIsEditing(false);
+    handleBlur(inputText);
   };
 
-  beginEdit = (e) => {
-    this.setState({ isEditing: true });
+  const beginEdit = (e) => {
+    setIsEditing(true);
     e.target.focus();
   };
-  render() {
-    const { type, text } = this.props;
-    return (
-      <div className={this.props.className}>
-        {this.state.isEditing ? (
+  return (
+    <div className={className}>
+      {isEditing ? (
+        <div className='edit-animation-container'>
           <div className="edit-container">
-            <span className="expander">
-              {this.state.text || this.props.text}
-            </span>
+            <span className="expander">{inputText || text}</span>
             {type === 'textarea' ? (
               <textarea
                 autoFocus
-                onFocus={this.handleFocus}
-                onBlur={this.handleBlur}
-                value={this.state.text}
-                onChange={this.handleChange}
+                onFocus={handleFocus}
+                onBlur={inputHandleBlur}
+                value={inputText}
+                onChange={handleChange}
               />
             ) : (
               <input
                 autoFocus
-                onFocus={this.handleFocus}
+                onFocus={handleFocus}
                 type={type}
-                onBlur={this.handleBlur}
-                value={this.state.text}
-                onChange={this.handleChange}
+                onBlur={inputHandleBlur}
+                value={inputText}
+                onChange={handleChange}
               />
             )}
-            <span className="focus-indicator" />
           </div>
-        ) : (
-          <span className="true-text" onClick={this.beginEdit}>
-            {text}
-          </span>
-        )}
-      </div>
-    );
-  }
+          <span className="focus-indicator" />
+        </div>
+      ) : (
+        <span className="true-text" onClick={beginEdit}>
+          {text}
+        </span>
+      )}
+    </div>
+  );
 }
