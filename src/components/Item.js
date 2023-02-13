@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import InputChild from './InputChild';
-import { DeleteButton } from './shared/helpers';
+import { DeleteButton, DRAG } from './shared/helpers';
+import dragIcon from '../assets/drag.svg';
 
 export default function Item({
   height,
@@ -21,6 +22,18 @@ export default function Item({
     updateComponentHeight(id, divElement.current.scrollHeight, set);
   });
 
+  const setSubChildren = (newArr) => {
+    set((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, subChildren: newArr } : item
+      )
+    );
+  };
+
+  const [dragOn, setDragOn] = useState(false);
+  
+  const drag = DRAG(subChildren, setSubChildren, setDragOn);
+  
   return (
     <div ref={divElement}>
       <InputChild
@@ -36,8 +49,22 @@ export default function Item({
         handleBlur={handleBlur(set, 'duration', [id])}
       />
       <ul className={`section--sub-children`}>
-        {subChildren.map((item) => (
-          <li key={item.id}>
+        {subChildren.map((item, index) => (
+          <li
+            key={item.id}
+            onDragStart={(e) => drag.start(e, index)}
+            onDragEnter={(e) => drag.enter(e, index)}
+            onDragEnd={drag.drop}
+            draggable={dragOn}
+          >
+            <div
+              className="icon-button sub-drag-button"
+              onMouseDown={() => setDragOn(true)}
+              onMouseUp={() => setDragOn(false)}
+            >
+              <img src={dragIcon} alt="drag" />
+            </div>
+            <span className='sub-child-dot'></span>
             <InputChild
               text={item.data.input}
               type="textarea"

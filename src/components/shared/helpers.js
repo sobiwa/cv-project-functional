@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, useRef } from 'react';
 import addIcon from '../../assets/add.svg';
 import deleteIcon from '../../assets/delete.svg';
 
@@ -67,4 +67,37 @@ export class DeleteButton extends Component {
       </button>
     );
   }
+}
+
+export function DRAG(data, setData, setDraggable) {
+  const item = useRef(null);
+  const overItem = useRef(null);
+  const start = (e, position) => {
+    e.stopPropagation();
+    item.current = position;
+  };
+
+  const enter = (e, position) => {
+    e.stopPropagation();
+    overItem.current = position;
+  };
+
+  const drop = (e) => {
+    e.stopPropagation();
+    const copy = [...data];
+    const draggedItem = copy[item.current];
+    copy.splice(item.current, 1);
+    copy.splice(overItem.current, 0, draggedItem);
+    item.current = null;
+    overItem.current = null;
+    setData(copy);
+    setDraggable(false);
+    console.log(copy, draggedItem, item, overItem);
+  };
+
+  return {
+    start,
+    enter,
+    drop,
+  };
 }

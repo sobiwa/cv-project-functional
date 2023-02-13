@@ -339,8 +339,12 @@ textarea {
   bottom: 0;
   margin: auto 0 auto 0;
   padding: 0.2em;
-  /* border: 2px solid rgb(245, 91, 91); */
   background: radial-gradient(rgba(245, 91, 91, 0.604), rgb(245, 91, 91));
+}
+
+.delete-sub-child-button {
+  padding: 0.1em;
+  right: 0;
 }
 
 .link-toggle-button {
@@ -354,13 +358,29 @@ textarea {
   background: radial-gradient(rgba(222, 255, 88, 0.28), rgb(222, 255, 88));
 }
 
-.drag-button {
-  padding: 0.3em;
+.drag-button,
+.sub-drag-button {
   background: radial-gradient(rgba(240, 173, 255, 0.204), rgb(240, 173, 255));
   cursor: grab;
 }
 
-.drag-button:active {
+.drag-button {
+  padding: 0.3em;
+}
+
+.sub-drag-button {
+  padding: 0.1em;
+  position: absolute;
+  left: 0.3em;
+  top: 0;
+  bottom: 0;
+  margin-top:auto;
+  margin-bottom:auto;
+
+}
+
+.drag-button:active,
+.sub-drag-button:active {
   cursor: grabbing;
 }
 
@@ -378,7 +398,8 @@ textarea {
 .section-item:hover .add-sub-child-button,
 .section--sub-children li:hover .delete-sub-child-button,
 .section-content:hover .add-item-button,
-.section-item:hover .drag-button {
+.section-item:hover .drag-button,
+.section--sub-children li:hover .sub-drag-button {
   display: flex;
 }
 
@@ -397,12 +418,14 @@ textarea {
 .add-button img,
 .link-toggle-button img,
 .add-sub-child-button img,
-.drag-button img {
+.drag-button img,
+.sub-drag-button img {
   height: 100%;
   width: 100%;
 }
 
-.drag-button img {
+.drag-button img,
+.sub-drag-button img {
   pointer-events: none;
 }
 
@@ -459,17 +482,41 @@ main {
 }
 .section--sub-children {
   margin: 0;
-  padding: 0.5rem 0 0 3rem;
-  list-style: disc;
+  padding: 0.5rem 0 0 0;
+  list-style: none;
 }
 
 .section--sub-children li {
   position: relative;
+  padding-left: 3rem;
+  padding-right: 1.5em;
+  margin-right: -1.5em;
 }
 
-.section--sub-children li .delete-sub-child-button {
-  height: 1.1rem;
-  width: 1.1rem;
+.sub-child-dot {
+  position: relative;
+  border-radius: 50%;
+}
+
+.sub-child-dot::before {
+  position: absolute;
+  content: '';
+  background-color: black;
+  height: 0.3em;
+  width: 0.3em;
+  top: 0.7em;
+  left: -0.95em;
+  border-radius: inherit;
+}
+
+li:has(.edit-container) .sub-child-dot::before {
+  visibility: hidden;
+}
+
+.section--sub-children li .icon-button {
+  box-sizing: border-box;
+  height: 1.3rem;
+  width: 1.3rem;
 }
 
 .employment--buttons,
@@ -489,10 +536,6 @@ main {
 .reference--email {
   font-size: 0.9rem;
   vertical-align: text-bottom;
-}
-
-li:has(.edit-container) {
-  list-style: none;
 }
 
 @media print {

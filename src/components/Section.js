@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Item from './Item';
-import { DeleteButton, AddButton } from './shared/helpers';
+import { DeleteButton, AddButton, DRAG } from './shared/helpers';
 import employmentIcon from '../assets/employment.svg';
 import educationIcon from '../assets/education.svg';
 import referenceIcon from '../assets/reference.svg';
@@ -37,27 +37,30 @@ export default function Section({
   };
   const all = fillIns(section);
 
-  const dragItem = useRef();
-  const dragOverItem = useRef();
+  const drag = DRAG(items, set, setDragOn);
 
-  const dragStart = (e, position) => {
-    dragItem.current = position;
-  };
 
-  const dragEnter = (e, position) => {
-    dragOverItem.current = position;
-  };
+  // const dragItem = useRef();
+  // const dragOverItem = useRef();
 
-  const drop = (e) => {
-    const copy = [...items];
-    const draggedItem = copy[dragItem.current];
-    copy.splice(dragItem.current, 1);
-    copy.splice(dragOverItem.current, 0, draggedItem);
-    dragItem.current = null;
-    dragOverItem.current = null;
-    set(copy);
-    setDragOn(false);
-  };
+  // const dragStart = (e, position) => {
+  //   dragItem.current = position;
+  // };
+
+  // const dragEnter = (e, position) => {
+  //   dragOverItem.current = position;
+  // };
+
+  // const drop = (e) => {
+  //   const copy = [...items];
+  //   const draggedItem = copy[dragItem.current];
+  //   copy.splice(dragItem.current, 1);
+  //   copy.splice(dragOverItem.current, 0, draggedItem);
+  //   dragItem.current = null;
+  //   dragOverItem.current = null;
+  //   set(copy);
+  //   setDragOn(false);
+  // };
   return (
     <section className={section}>
       <div className="section-icon">
@@ -70,9 +73,9 @@ export default function Section({
             <div
               key={item.id}
               className={`section-item`}
-              onDragStart={(e) => dragStart(e, index)}
-              onDragEnter={(e) => dragEnter(e, index)}
-              onDragEnd={drop}
+              onDragStart={(e) => drag.start(e, index)}
+              onDragEnter={(e) => drag.enter(e, index)}
+              onDragEnd={drag.drop}
               draggable={dragOn}
             >
               <Item
