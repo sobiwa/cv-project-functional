@@ -1,23 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Item from './Item';
-import { DeleteButton, AddButton, DRAG } from './shared/helpers';
+import {
+  addItem,
+  deleteItem,
+  addSubChild,
+  DRAG,
+} from './shared/helpers';
+import { DeleteButton, AddButton, DragButton} from './shared/buttons';
 import employmentIcon from '../assets/employment.svg';
 import educationIcon from '../assets/education.svg';
 import referenceIcon from '../assets/reference.svg';
 import addToListIcon from '../assets/add-task.svg';
-import dragIcon from '../assets/drag.svg';
 
-export default function Section({
-  section,
-  set,
-  items,
-  addItem,
-  deleteItem,
-  addSubChild,
-  deleteSubChild,
-  handleBlur,
-  updateComponentHeight,
-}) {
+export default function Section({ section, set, items }) {
   const [dragOn, setDragOn] = useState(false);
   const fillIns = (sec) => {
     switch (sec) {
@@ -39,28 +34,6 @@ export default function Section({
 
   const drag = DRAG(items, set, setDragOn);
 
-
-  // const dragItem = useRef();
-  // const dragOverItem = useRef();
-
-  // const dragStart = (e, position) => {
-  //   dragItem.current = position;
-  // };
-
-  // const dragEnter = (e, position) => {
-  //   dragOverItem.current = position;
-  // };
-
-  // const drop = (e) => {
-  //   const copy = [...items];
-  //   const draggedItem = copy[dragItem.current];
-  //   copy.splice(dragItem.current, 1);
-  //   copy.splice(dragOverItem.current, 0, draggedItem);
-  //   dragItem.current = null;
-  //   dragOverItem.current = null;
-  //   set(copy);
-  //   setDragOn(false);
-  // };
   return (
     <section className={section}>
       <div className="section-icon">
@@ -86,19 +59,10 @@ export default function Section({
                 location={item.location.input}
                 duration={item.duration.input}
                 subChildren={item.subChildren}
-                deleteSubChild={deleteSubChild}
-                handleBlur={handleBlur}
-                updateComponentHeight={updateComponentHeight}
                 height={item.height}
               />
               <div className={`flex-buttons ${section}--buttons`}>
-                <div
-                className='icon-button drag-button'
-                  onMouseDown={() => setDragOn(true)}
-                  onMouseUp={() => setDragOn(false)}
-                >
-                  <img src={dragIcon} alt="drag" />
-                </div>
+                <DragButton toggle={setDragOn} />
                 <button
                   title={`Add ${all.subChild}`}
                   className="icon-button add-sub-child-button"

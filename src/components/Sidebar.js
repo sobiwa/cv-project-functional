@@ -5,12 +5,11 @@ import uniqid from 'uniqid';
 import linkIcon from '../assets/link.svg';
 import linkOffIcon from '../assets/link-off.svg';
 import {
-  DeleteButton,
-  AddButton,
   handleBlur,
   newItem,
   retrieveDataOrRenderDefault,
 } from './shared/helpers';
+import { DeleteButton, AddButton } from './shared/buttons'
 
 export default function Sidebar({ display }) {
   const createNewDetails = () => ({

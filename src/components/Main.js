@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import {
-  handleBlur,
   newItem,
   retrieveDataOrRenderDefault,
+  creator,
 } from './shared/helpers';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -10,62 +10,8 @@ import PageMain from './PageMain';
 import Profile from './Profile';
 import layoutIcon from '../assets/layout.svg';
 import Layout from './Layout';
-import uniqid from 'uniqid';
 
 export default function Main() {
-  const newTask = () => ({
-    id: uniqid(),
-    data: newItem(
-      'Pet cats and ensured they received abundant quantities of love.'
-    ),
-  });
-  const newDetail = () => ({
-    id: uniqid(),
-    data: newItem('GPA: 4.0'),
-  });
-
-  const createNewEmployment = () => {
-    return {
-      id: uniqid(),
-      location: newItem('Cat Consultant at Feline Corp., New York'),
-      duration: newItem('April 1993 - February 2023'),
-      subChildren: [newTask()],
-      height: 0,
-    };
-  };
-
-  const createNewEducation = () => {
-    return {
-      id: uniqid(),
-      location: newItem('Bachelor of Science, Cat University'),
-      duration: newItem('August 2003 - May 2007'),
-      subChildren: [newDetail()],
-      height: 0,
-    };
-  };
-
-  const createNewReference = () => {
-    return {
-      id: uniqid(),
-      contact: newItem('Joey Pantalones'),
-      email: newItem('joeyPants@pmail.com'),
-      phone: newItem('(444) 555 - 6666'),
-      height: 0,
-    };
-  };
-
-  const creator = (section) => {
-    switch (section) {
-      case 'employment':
-        return createNewEmployment();
-      case 'education':
-        return createNewEducation();
-      case 'references':
-        return createNewReference();
-      default:
-        return;
-    }
-  };
 
   const [profile, setProfile] = useState(
     JSON.parse(localStorage.getItem('profile')) || {
@@ -117,43 +63,9 @@ export default function Main() {
     setProfile((prev) => ({ ...prev, height: newHeight }));
   };
 
-  const addItem = (section, set) => {
-    set((prevState) => [...prevState, creator(section)]);
-  };
-
-  const deleteItem = (id, set) => {
-    set((prevState) => prevState.filter((item) => item.id !== id));
-  };
-
-  const addSubChild = (section, id, set) => {
-    const subCreator = section === 'employment' ? newTask : newDetail;
-    set((prevState) =>
-      prevState.map((item) =>
-        item.id === id
-          ? { ...item, subChildren: [...item.subChildren, subCreator()] }
-          : item
-      )
-    );
-  };
-
-  const deleteSubChild = (id, nestedId, set) => {
-    set((prevState) =>
-      prevState.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              subChildren: item.subChildren.filter(
-                (nested) => nested.id !== nestedId
-              ),
-            }
-          : item
-      )
-    );
-  };
-
   const distributeItems = () => {
     let currentPageNumber = 1;
-    const fullPageLength = height.page * 0.93;
+    const fullPageLength = height.page * 0.92;
     const titleHeight = height.heading;
     function newPage(num) {
       return {
@@ -208,14 +120,6 @@ export default function Main() {
     }));
 
     return filteredPages;
-  };
-
-  const updateComponentHeight = (id, newHeight, set) => {
-    set((prevState) =>
-      prevState.map((item) =>
-        item.id === id ? { ...item, height: newHeight } : item
-      )
-    );
   };
 
   useEffect(() => {
@@ -308,12 +212,6 @@ export default function Main() {
                 setEducation={setEducation}
                 references={item.references}
                 setReferences={setReferences}
-                handleBlur={handleBlur}
-                addItem={addItem}
-                deleteItem={deleteItem}
-                addSubChild={addSubChild}
-                deleteSubChild={deleteSubChild}
-                updateComponentHeight={updateComponentHeight}
               />
             </main>
           </div>
@@ -332,12 +230,6 @@ export default function Main() {
               setEducation={setEducation}
               references={item.references}
               setReferences={setReferences}
-              handleBlur={handleBlur}
-              addItem={addItem}
-              deleteItem={deleteItem}
-              addSubChild={addSubChild}
-              deleteSubChild={deleteSubChild}
-              updateComponentHeight={updateComponentHeight}
             />
           </div>
         )

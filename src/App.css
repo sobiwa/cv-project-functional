@@ -284,14 +284,13 @@ textarea {
 }
 
 .skill--notch {
-  margin-left: -1px;
+  /* margin-left: -1px; */
   transition: 0.3s;
   background-color: rgb(147, 210, 231);
   cursor: pointer;
   height: 100%;
   flex: 1 1 auto;
-  border-left: 1px solid rgba(169, 169, 169, 0.684);
-  /* border-radius: 0.15em 0 0 0.15em; */
+  border-left: 0.5px solid rgba(169, 169, 169, 0.684);
   border-radius: 0.15em 0.1em 0.1em 0.15em;
 }
 

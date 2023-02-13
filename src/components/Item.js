@@ -1,18 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import InputChild from './InputChild';
-import { DeleteButton, DRAG } from './shared/helpers';
+import {
+  handleBlur,
+  deleteSubChild,
+  DRAG,
+  updateComponentHeight,
+} from './shared/helpers';
+import { DeleteButton } from './shared/buttons';
 import dragIcon from '../assets/drag.svg';
 
 export default function Item({
   height,
-  updateComponentHeight,
   section,
   set,
   location,
   duration,
   subChildren,
-  deleteSubChild,
-  handleBlur,
   id,
 }) {
   const divElement = useRef(0);
@@ -31,9 +34,9 @@ export default function Item({
   };
 
   const [dragOn, setDragOn] = useState(false);
-  
+
   const drag = DRAG(subChildren, setSubChildren, setDragOn);
-  
+
   return (
     <div ref={divElement}>
       <InputChild
@@ -64,7 +67,7 @@ export default function Item({
             >
               <img src={dragIcon} alt="drag" />
             </div>
-            <span className='sub-child-dot'></span>
+            <span className="sub-child-dot"></span>
             <InputChild
               text={item.data.input}
               type="textarea"

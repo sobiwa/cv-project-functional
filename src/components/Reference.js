@@ -1,16 +1,15 @@
 import { useRef, useEffect } from 'react';
 import InputChild from './InputChild';
+import { handleBlur, updateComponentHeight } from './shared/helpers';
 
 export default function Reference({
   phoneDisplay,
   id,
   height,
-  updateComponentHeight,
   set,
   contact,
   email,
   phone,
-  handleBlur,
 }) {
   const divElement = useRef(0);
 
