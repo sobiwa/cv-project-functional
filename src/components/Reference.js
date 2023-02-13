@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import InputChild from './InputChild';
 
 export default function Reference({
+  phoneDisplay,
   id,
   height,
   updateComponentHeight,
@@ -34,13 +35,14 @@ export default function Reference({
           type="email"
           handleBlur={handleBlur(set, 'email', [id])}
         />
-        |
+        {phoneDisplay ? '|' : ''}
+        {phoneDisplay &&
         <InputChild
           className={'reference--phone'}
           text={phone}
           type="tel"
           handleBlur={handleBlur(set, 'phone', [id])}
-        />
+        />}
       </div>
     </div>
   );

@@ -92,6 +92,7 @@ export default function Main() {
     jobTitle: true,
     details: true,
     skills: true,
+    skillScale: true,
     links: true,
     profile: true,
     employment: true,
@@ -101,13 +102,6 @@ export default function Main() {
   });
 
   const [showLayoutDisplay, setShowLayoutDisplay] = useState(false);
-
-  const toggleDisplay = (area, subArea) => {
-    setLayoutDisplay((prev) => ({
-      ...prev,
-      [area]: { ...prev[area], [subArea]: !prev[area][subArea] },
-    }));
-  };
 
   const updateProfile = (newText) => {
     setProfile((prev) => ({
@@ -260,24 +254,54 @@ export default function Main() {
   const pages = distributeItems();
   return (
     <div className="page-container">
-      <button className="layout-button" type="button" onClick={() => setShowLayoutDisplay(prev => !prev)}>
+      <button
+        className="layout-button"
+        type="button"
+        onClick={() => setShowLayoutDisplay((prev) => !prev)}
+      >
         <img src={layoutIcon} alt="layout settings" />
       </button>
-      {showLayoutDisplay && <Layout layoutDisplay={layoutDisplay} setLayoutDisplay={setLayoutDisplay} hide={setShowLayoutDisplay}/>}
+      {showLayoutDisplay && (
+        <Layout
+          layoutDisplay={layoutDisplay}
+          setLayoutDisplay={setLayoutDisplay}
+          hide={setShowLayoutDisplay}
+        />
+      )}
       {pages.map((item) =>
         item.pageNum === 1 ? (
           <div key={item.pageNum} className="page page-one">
-            <Header />
-            <Sidebar />
+            <Header
+              display={{
+                image: layoutDisplay.image,
+                jobTitle: layoutDisplay.jobTitle,
+              }}
+            />
+            <Sidebar
+              display={{
+                details: layoutDisplay.details,
+                skills: layoutDisplay.skills,
+                links: layoutDisplay.links,
+                scale: layoutDisplay.skillScale,
+              }}
+            />
             <main>
-              <Profile
-                pageHeight={height.page}
-                handleBlur={updateProfile}
-                height={profile.height}
-                updateHeight={updateProfileHeight}
-                text={profile.text.input}
-              />
+              {layoutDisplay.profile && (
+                <Profile
+                  pageHeight={height.page}
+                  handleBlur={updateProfile}
+                  height={profile.height}
+                  updateHeight={updateProfileHeight}
+                  text={profile.text.input}
+                />
+              )}
               <PageMain
+                display={{
+                  employment: layoutDisplay.employment,
+                  education: layoutDisplay.education,
+                  references: layoutDisplay.references,
+                  phone: layoutDisplay.phone,
+                }}
                 employment={item.employment}
                 setEmployment={setEmployment}
                 education={item.education}
@@ -296,6 +320,12 @@ export default function Main() {
         ) : (
           <div className="page" key={item.pageNum}>
             <PageMain
+              display={{
+                employment: layoutDisplay.employment,
+                education: layoutDisplay.education,
+                references: layoutDisplay.references,
+                phone: layoutDisplay.phone,
+              }}
               employment={item.employment}
               setEmployment={setEmployment}
               education={item.education}

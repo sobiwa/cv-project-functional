@@ -40,6 +40,9 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
       case 'phone':
         returnObj.text = 'Reference Phone';
         break;
+      case 'skillScale':
+        returnObj.text = 'Skill Scale';
+        break;
       default:
         break;
     }

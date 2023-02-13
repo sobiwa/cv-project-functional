@@ -1,9 +1,11 @@
+import { useState, useRef } from 'react';
 import Item from './Item';
 import { DeleteButton, AddButton } from './shared/helpers';
 import employmentIcon from '../assets/employment.svg';
 import educationIcon from '../assets/education.svg';
 import referenceIcon from '../assets/reference.svg';
 import addToListIcon from '../assets/add-task.svg';
+import dragIcon from '../assets/drag.svg';
 
 export default function Section({
   section,
@@ -16,6 +18,7 @@ export default function Section({
   handleBlur,
   updateComponentHeight,
 }) {
+  const [dragOn, setDragOn] = useState(false);
   const fillIns = (sec) => {
     switch (sec) {
       case 'employment':
@@ -33,6 +36,28 @@ export default function Section({
     }
   };
   const all = fillIns(section);
+
+  const dragItem = useRef();
+  const dragOverItem = useRef();
+
+  const dragStart = (e, position) => {
+    dragItem.current = position;
+  };
+
+  const dragEnter = (e, position) => {
+    dragOverItem.current = position;
+  };
+
+  const drop = (e) => {
+    const copy = [...items];
+    const draggedItem = copy[dragItem.current];
+    copy.splice(dragItem.current, 1);
+    copy.splice(dragOverItem.current, 0, draggedItem);
+    dragItem.current = null;
+    dragOverItem.current = null;
+    set(copy);
+    setDragOn(false);
+  };
   return (
     <section className={section}>
       <div className="section-icon">
@@ -41,8 +66,15 @@ export default function Section({
       <div className="section-content">
         <h2 className="main--title">{all.title}</h2>
         <div className="section-items">
-          {items.map((item) => (
-            <div key={item.id} className={`section-item`}>
+          {items.map((item, index) => (
+            <div
+              key={item.id}
+              className={`section-item`}
+              onDragStart={(e) => dragStart(e, index)}
+              onDragEnter={(e) => dragEnter(e, index)}
+              onDragEnd={drop}
+              draggable={dragOn}
+            >
               <Item
                 key={item.id}
                 id={item.id}
@@ -57,6 +89,13 @@ export default function Section({
                 height={item.height}
               />
               <div className={`flex-buttons ${section}--buttons`}>
+                <div
+                className='icon-button drag-button'
+                  onMouseDown={() => setDragOn(true)}
+                  onMouseUp={() => setDragOn(false)}
+                >
+                  <img src={dragIcon} alt="drag" />
+                </div>
                 <button
                   title={`Add ${all.subChild}`}
                   className="icon-button add-sub-child-button"

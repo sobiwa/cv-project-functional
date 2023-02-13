@@ -4,6 +4,7 @@ import Section from './Section';
 import { AddButton, DeleteButton } from './shared/helpers';
 
 export default function PageMain ({
+  display,
   employment,
   setEmployment,
   education,
@@ -20,7 +21,7 @@ export default function PageMain ({
 
     return (
       <div>
-          {employment.length > 0 && (
+          {display.employment && employment.length > 0 && (
             <Section 
             section='employment'
             set={setEmployment}
@@ -32,7 +33,7 @@ export default function PageMain ({
             handleBlur={handleBlur}
             updateComponentHeight={updateComponentHeight}
           />)}
-          {education.length > 0 && (
+          {display.education && education.length > 0 && (
             <Section 
             section='education'
             set={setEducation}
@@ -44,7 +45,7 @@ export default function PageMain ({
             handleBlur={handleBlur}
             updateComponentHeight={updateComponentHeight}
           />)}
-          {references.length > 0 && (
+          {display.references && references.length > 0 && (
             <section className='references'>
             <div className="section-icon">
               <img src={referenceIcon} alt='reference icon' />
@@ -55,6 +56,7 @@ export default function PageMain ({
                 {references.map((item) => (
                   <div key={item.id} className='section-item'>
                     <Reference
+                      phoneDisplay={display.phone}
                       section='references'
                       set={setReferences}
                       id={item.id}

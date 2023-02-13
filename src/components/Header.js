@@ -3,7 +3,7 @@ import { newItem } from './shared/helpers';
 import InputChild from './InputChild';
 import profileImg from '../assets/profile.svg';
 
-export default function Header() {
+export default function Header({ display }) {
   const createNewName = () => ({
     first: newItem('First Name'),
     last: newItem('Last Name'),
@@ -47,18 +47,24 @@ export default function Header() {
 
   return (
     <div className="header">
-      <div className="header--image">
-        <label htmlFor="img-upload" className="header--image-upload-label">
-          <img className="header--image-upload-image" alt="user" src={imgSrc} />
-        </label>
-        <input
-          id="img-upload"
-          className="header--image-upload"
-          type="file"
-          accept="image/*"
-          onChange={loadImg}
-        />
-      </div>
+      {display.image && (
+        <div className="header--image">
+          <label htmlFor="img-upload" className="header--image-upload-label">
+            <img
+              className="header--image-upload-image"
+              alt="user"
+              src={imgSrc}
+            />
+          </label>
+          <input
+            id="img-upload"
+            className="header--image-upload"
+            type="file"
+            accept="image/*"
+            onChange={loadImg}
+          />
+        </div>
+      )}
       <div className="header--text">
         <div className="name">
           <InputChild
@@ -72,12 +78,14 @@ export default function Header() {
             handleBlur={handleBlur('last', setName)}
           />
         </div>
-        <InputChild
-          className="header--job-title"
-          type="text"
-          text={job.title.input}
-          handleBlur={handleBlur('title', setJob)}
-        />
+        {display.jobTitle && (
+          <InputChild
+            className="header--job-title"
+            type="text"
+            text={job.title.input}
+            handleBlur={handleBlur('title', setJob)}
+          />
+        )}
       </div>
     </div>
   );
