@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/cv-project-functional/static/css/main.f7d2e3e9.css",
+    "main.css": "/cv-project-functional/static/css/main.2085ed10.css",
     "main.js": "/cv-project-functional/static/js/main.2b54a340.js",
     "static/media/inter-variablefont_slntwght-webfont.woff": "/cv-project-functional/static/media/inter-variablefont_slntwght-webfont.93ac38cea20220bbb7fa.woff",
     "static/media/karla-italic-variablefont_wght-webfont.woff": "/cv-project-functional/static/media/karla-italic-variablefont_wght-webfont.b26f7bfefa8cba3f7c34.woff",
@@ -28,11 +28,11 @@
     "static/media/delete.svg": "/cv-project-functional/static/media/delete.3270f2c93c8c138fa6cc69fbd18f985e.svg",
     "static/media/education.svg": "/cv-project-functional/static/media/education.2f6d1be5ec3a74e5207a8a9b6fc8dd00.svg",
     "static/media/add.svg": "/cv-project-functional/static/media/add.46ae0e09d1132337aa923311b95c4996.svg",
-    "main.f7d2e3e9.css.map": "/cv-project-functional/static/css/main.f7d2e3e9.css.map",
+    "main.2085ed10.css.map": "/cv-project-functional/static/css/main.2085ed10.css.map",
     "main.2b54a340.js.map": "/cv-project-functional/static/js/main.2b54a340.js.map"
   },
   "entrypoints": [
-    "static/css/main.f7d2e3e9.css",
+    "static/css/main.2085ed10.css",
     "static/js/main.2b54a340.js"
   ]
 }
