@@ -79,7 +79,7 @@ const createNewEducation = () => {
 const createNewReference = () => {
   return {
     id: uniqid(),
-    contact: newItem('Joey Pantalones'),
+    contact: newItem('Joey Pantalones from CAT Corp., New York'),
     email: newItem('joeyPants@pmail.com'),
     phone: newItem('(444) 555 - 6666'),
     height: 0,

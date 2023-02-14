@@ -164,33 +164,31 @@ export default function Sidebar({ display }) {
       {display.skills && (
         <div className="sidebar--section sidebar--skills">
           <h4 className="sidebar--title">Skills</h4>
-          {skills.map((skill) => {
-            return (
-              <div
-                key={skill.id}
-                className={`sidebar--skill ${
-                  display.scale ? '' : 'skill--scaleless'
-                }`}
-              >
-                <InputChild
-                  type="text"
-                  text={skill.text.input}
-                  handleBlur={handleBlur(setSkills, 'text', [skill.id])}
+          {skills.map((skill) => (
+            <div
+              key={skill.id}
+              className={`sidebar--skill ${
+                display.scale ? '' : 'skill--scaleless'
+              }`}
+            >
+              <InputChild
+                type="text"
+                text={skill.text.input}
+                handleBlur={handleBlur(setSkills, 'text', [skill.id])}
+              />
+              {display.scale && (
+                <SkillVisual
+                  num={skill.scale}
+                  id={skill.id}
+                  handleClick={adjustSkillScale(skill.id)}
                 />
-                {display.scale && (
-                  <SkillVisual
-                    num={skill.scale}
-                    id={skill.id}
-                    handleClick={adjustSkillScale(skill.id)}
-                  />
-                )}
-                <DeleteButton
-                  onClick={() => deleteItem(skill.id, setSkills)}
-                  whatToDelete="skill"
-                />
-              </div>
-            );
-          })}
+              )}
+              <DeleteButton
+                onClick={() => deleteItem(skill.id, setSkills)}
+                whatToDelete="skill"
+              />
+            </div>
+          ))}
           <AddButton
             onClick={() => addItem('skills', setSkills)}
             whatToAdd="skill"
@@ -202,8 +200,14 @@ export default function Sidebar({ display }) {
           <h4 className="sidebar--title">Links</h4>
           {links.map((link) => {
             return (
-              <div key={link.id} className="sidebar--link"
-              style={{display: display.linksDescription ? 'block' : 'flex', gap: '0.5em'}}>
+              <div
+                key={link.id}
+                className="sidebar--link"
+                style={{
+                  display: display.linksDescription ? 'block' : 'flex',
+                  gap: '0.5em',
+                }}
+              >
                 <div className="website--container">
                   {display.linksImg && (
                     <div>
@@ -213,8 +217,9 @@ export default function Sidebar({ display }) {
                           display: link.selectorVisible ? 'flex' : 'none',
                         }}
                       >
-                        {images.map((image) => (
+                        {images.map((image, index) => (
                           <img
+                            key={index}
                             onClick={() => changeImage(link.id, image)}
                             src={image.source}
                             alt={image.alt}

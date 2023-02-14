@@ -12,11 +12,10 @@ import layoutIcon from '../assets/layout.svg';
 import Layout from './Layout';
 
 export default function Main() {
-
   const [profile, setProfile] = useState(
     JSON.parse(localStorage.getItem('profile')) || {
       text: newItem(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae enim ac enim mattis luctus. Maecenas ut velit mauris. Donec pretium elit porttitor augue condimentum, eget vulputate nibh ultrices.'
+        'Lorem ipsum dolor sit amet, there is a button in the top left that will allow you to remove / re-add components. The button in the top right will help you print your pages. The rest of the buttons should be pretty self-explanatory, hopefully. If not, hover for a second, and it should be cleared right up. Click around and good luck!'
       ),
       height: 0,
     }
@@ -33,21 +32,23 @@ export default function Main() {
   );
   const [height, setHeight] = useState({});
 
-  const [layoutDisplay, setLayoutDisplay] = useState({
-    image: true,
-    jobTitle: true,
-    details: true,
-    skills: true,
-    skillScale: true,
-    links: true,
-    linksImg: true,
-    linksDescription: true,
-    profile: true,
-    employment: true,
-    education: true,
-    references: true,
-    phone: true,
-  });
+  const [layoutDisplay, setLayoutDisplay] = useState(
+    JSON.parse(localStorage.getItem('layout')) || {
+      image: true,
+      jobTitle: true,
+      details: true,
+      skills: true,
+      skillScale: true,
+      links: true,
+      linksImg: true,
+      linksDescription: true,
+      profile: true,
+      employment: true,
+      education: true,
+      references: true,
+      phone: true,
+    }
+  );
 
   const [showLayoutDisplay, setShowLayoutDisplay] = useState(false);
 
@@ -139,6 +140,10 @@ export default function Main() {
   useEffect(() => {
     localStorage.setItem('references', JSON.stringify(references));
   }, [references]);
+
+  useEffect(() => {
+    localStorage.setItem('layout', JSON.stringify(layoutDisplay));
+  });
 
   const updateHeights = () => {
     setHeight({

@@ -6,6 +6,7 @@ export function AddButton({ onClick, whatToAdd }) {
   return (
     <button
       className={`icon-button add-button add-${whatToAdd}-button`}
+      title={`Add ${whatToAdd}`}
       type="button"
       onClick={onClick}
     >
@@ -18,6 +19,7 @@ export function DeleteButton({ onClick, whatToDelete }) {
   return (
     <button
       className={`icon-button delete-button delete-${whatToDelete}-button`}
+      title={`Delete ${whatToDelete}`}
       type="button"
       onClick={onClick}
     >
@@ -29,6 +31,7 @@ export function DeleteButton({ onClick, whatToDelete }) {
 export function DragButton({ toggle }) {
   return (
     <div
+      title={'Move'}
       className="icon-button drag-button"
       onMouseDown={() => toggle(true)}
       onMouseUp={() => toggle(false)}
