@@ -40,6 +40,8 @@ export default function Main() {
     skills: true,
     skillScale: true,
     links: true,
+    linksImg: true,
+    linksDescription: true,
     profile: true,
     employment: true,
     education: true,
@@ -186,6 +188,8 @@ export default function Main() {
                 details: layoutDisplay.details,
                 skills: layoutDisplay.skills,
                 links: layoutDisplay.links,
+                linksImg: layoutDisplay.linksImg,
+                linksDescription: layoutDisplay.linksDescription,
                 scale: layoutDisplay.skillScale,
               }}
             />

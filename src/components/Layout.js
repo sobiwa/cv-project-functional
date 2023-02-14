@@ -5,7 +5,7 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
   };
 
   const displayText = (item) => {
-    const returnObj = { heading: null };
+    const returnObj = { heading: null, subCategory: false };
     switch (item) {
       case 'image':
         returnObj.heading = 'Header';
@@ -21,8 +21,20 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
       case 'skills':
         returnObj.text = 'Skills';
         break;
+      case 'skillScale':
+        returnObj.text = 'Scale';
+        returnObj.subCategory = true;
+        break;
       case 'links':
         returnObj.text = 'Links';
+        break;
+      case 'linksImg':
+        returnObj.text = 'Image';
+        returnObj.subCategory = true;
+        break;
+      case 'linksDescription':
+        returnObj.text = 'Description';
+        returnObj.subCategory = true;
         break;
       case 'profile':
         returnObj.heading = 'Main';
@@ -38,10 +50,8 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
         returnObj.text = 'References';
         break;
       case 'phone':
-        returnObj.text = 'Reference Phone';
-        break;
-      case 'skillScale':
-        returnObj.text = 'Skill Scale';
+        returnObj.text = 'Phone';
+        returnObj.subCategory = true;
         break;
       default:
         break;
@@ -51,17 +61,17 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
 
   return (
     <div className="gray-out">
-      <form className='layout-form' onSubmit={(e) => e.preventDefault()}>
+      <form className="layout-form" onSubmit={(e) => e.preventDefault()}>
         {Object.entries(layoutDisplay).map((item) => {
           const [name, bool] = item;
           const text = displayText(name);
           return (
-            <div>
-              {text.heading && <h2 className='form--title'>{text.heading}</h2>}
-              <label>
+            <div className={text.subCategory ? 'layout--sub-category' : ''}>
+              {text.heading && <h2 className="form--title">{text.heading}</h2>}
+              <label >
                 {text.text}
                 <input
-                  className='form--input'
+                  className="form--input"
                   name={name}
                   type="checkbox"
                   checked={bool}
@@ -71,7 +81,13 @@ export default function Layout({ layoutDisplay, setLayoutDisplay, hide }) {
             </div>
           );
         })}
-      <button className='layout-close-button' type='button' onClick={() => hide(false)}>Close</button>
+        <button
+          className="layout-close-button"
+          type="button"
+          onClick={() => hide(false)}
+        >
+          Close
+        </button>
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function InputChild({
   className,
@@ -26,6 +26,11 @@ export default function InputChild({
     setIsEditing(true);
     e.target.focus();
   };
+
+  useEffect(() => {
+    setInputText(text);
+  }, [text]);
+  
   return (
     <div className={className}>
       {isEditing ? (

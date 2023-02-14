@@ -388,6 +388,10 @@ textarea {
   padding-right: 3rem;
   margin-right: -3rem;
 }
+
+.sidebar--link {
+  margin-bottom: 0.5em;
+}
 .sidebar--skill:hover .icon-button,
 .sidebar--skills:hover .add-skill-button,
 .sidebar--link:hover .icon-button,
@@ -435,6 +439,49 @@ textarea {
   color: rgb(93, 206, 255);
 }
 
+.website--container {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.website--container img {
+  height: 100%;
+}
+
+.icon-selector {
+  position: absolute;
+  background-color: rgb(227, 236, 235);
+  border-radius: 1em 1em 1em 0;
+  padding: 0.5em;
+  display: flex;
+  gap: 0.5em;
+  height: 2em;
+  top: -3.2em;
+}
+
+.website--icon,
+.icon-selector img {
+  cursor: pointer;
+}
+
+.icon-selector img {
+  transition: 0.3s;
+  opacity: 0.3;
+}
+
+.icon-selector img:hover,
+.website--icon:hover {
+  opacity: 1;
+  scale: 1.2;
+}
+
+.website--icon {
+  transition: 0.3s;
+  height: 1.5em;
+  width: 1.5em;
+}
+
 .flex-buttons {
   padding: 1em 0;
   display: flex;
@@ -442,7 +489,7 @@ textarea {
 }
 
 .main--title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-family: Karla, sans-serif;
   font-weight: 600;
   margin: 0;
@@ -578,7 +625,7 @@ li:has(.edit-container) .sub-child-dot::before {
 
 .layout-form {
   font-family: Karla;
-  font-size: 20px;
+  font-size: 2rem;
   background-color: white;
   padding: 5rem;
   border-radius: 1rem;
@@ -598,8 +645,17 @@ li:has(.edit-container) .sub-child-dot::before {
   position: relative;
   display: flex;
   flex-direction: row-reverse;
+  align-items: center;
   justify-content: flex-end;
   gap: 0.3em;
+}
+
+.layout-form .layout--sub-category {
+  font-size: 1.5rem;
+  margin: 0rem 0 0 2rem;
+}
+.layout--sub-category input {
+  font-size: 1rem;
 }
 
 .form--input {

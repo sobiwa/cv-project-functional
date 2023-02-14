@@ -4,12 +4,19 @@ import SkillVisual from './SkillVisual';
 import uniqid from 'uniqid';
 import linkIcon from '../assets/link.svg';
 import linkOffIcon from '../assets/link-off.svg';
+import imageIcon from '../assets/image.svg';
+import facebookIcon from '../assets/facebook.svg';
+import instagramIcon from '../assets/instagram.svg';
+import githubIcon from '../assets/github.svg';
+import linkedInIcon from '../assets/linkedin.svg';
+import twitterIcon from '../assets/twitter.svg';
+
 import {
   handleBlur,
   newItem,
   retrieveDataOrRenderDefault,
 } from './shared/helpers';
-import { DeleteButton, AddButton } from './shared/buttons'
+import { DeleteButton, AddButton } from './shared/buttons';
 
 export default function Sidebar({ display }) {
   const createNewDetails = () => ({
@@ -18,6 +25,14 @@ export default function Sidebar({ display }) {
     phone: newItem('Phone number'),
     email: newItem('email@example.com'),
   });
+
+  const images = [
+    { source: facebookIcon, alt: 'Facebook' },
+    { source: instagramIcon, alt: 'Instagram' },
+    { source: githubIcon, alt: 'GitHub' },
+    { source: linkedInIcon, alt: 'LinkedIn' },
+    { source: twitterIcon, alt: 'Twitter' },
+  ];
 
   const createNewSkill = () => ({
     id: uniqid(),
@@ -28,6 +43,8 @@ export default function Sidebar({ display }) {
     id: uniqid(),
     description: newItem('new link'),
     url: newItem('example.com'),
+    selectorVisible: false,
+    img: { source: imageIcon, alt: 'icon placeholder' },
   });
 
   const creator = (section) =>
@@ -68,6 +85,32 @@ export default function Sidebar({ display }) {
     if (!linksOn) {
       e.preventDefault();
     }
+  };
+
+  const toggleSelector = (id) => {
+    setLinks((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, selectorVisible: !item.selectorVisible }
+          : item
+      )
+    );
+  };
+
+  const changeImage = (id, image) => {
+    const { source, alt } = image;
+    setLinks((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              img: { source: source, alt: alt },
+              description: { ...item.description, input: alt },
+              selectorVisible: false,
+            }
+          : item
+      )
+    );
   };
 
   const adjustSkillScale = (id) => {
@@ -123,13 +166,24 @@ export default function Sidebar({ display }) {
           <h4 className="sidebar--title">Skills</h4>
           {skills.map((skill) => {
             return (
-              <div key={skill.id} className={`sidebar--skill ${display.scale ? '' : 'skill--scaleless'}`}>
+              <div
+                key={skill.id}
+                className={`sidebar--skill ${
+                  display.scale ? '' : 'skill--scaleless'
+                }`}
+              >
                 <InputChild
                   type="text"
                   text={skill.text.input}
                   handleBlur={handleBlur(setSkills, 'text', [skill.id])}
                 />
-                {display.scale && <SkillVisual num={skill.scale} id={skill.id} handleClick={adjustSkillScale(skill.id)}/>}
+                {display.scale && (
+                  <SkillVisual
+                    num={skill.scale}
+                    id={skill.id}
+                    handleClick={adjustSkillScale(skill.id)}
+                  />
+                )}
                 <DeleteButton
                   onClick={() => deleteItem(skill.id, setSkills)}
                   whatToDelete="skill"
@@ -148,12 +202,44 @@ export default function Sidebar({ display }) {
           <h4 className="sidebar--title">Links</h4>
           {links.map((link) => {
             return (
-              <div key={link.id} className="sidebar--link">
-                <InputChild
-                  type="text"
-                  text={link.description.input}
-                  handleBlur={handleBlur(setLinks, 'description', [link.id])}
-                />
+              <div key={link.id} className="sidebar--link"
+              style={{display: display.linksDescription ? 'block' : 'flex', gap: '0.5em'}}>
+                <div className="website--container">
+                  {display.linksImg && (
+                    <div>
+                      <div
+                        className="icon-selector"
+                        style={{
+                          display: link.selectorVisible ? 'flex' : 'none',
+                        }}
+                      >
+                        {images.map((image) => (
+                          <img
+                            onClick={() => changeImage(link.id, image)}
+                            src={image.source}
+                            alt={image.alt}
+                          />
+                        ))}
+                      </div>
+                      <div className="website--icon">
+                        <img
+                          onClick={() => toggleSelector(link.id)}
+                          src={link.img.source}
+                          alt={link.img.alt}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {display.linksDescription && (
+                    <InputChild
+                      type="text"
+                      text={link.description.input}
+                      handleBlur={handleBlur(setLinks, 'description', [
+                        link.id,
+                      ])}
+                    />
+                  )}
+                </div>
                 <a
                   style={{ cursor: linksOn ? 'pointer' : 'text' }}
                   onClick={handleLinkClick}
